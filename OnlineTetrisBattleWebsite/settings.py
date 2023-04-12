@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'web.urls'
+ROOT_URLCONF = 'OnlineTetrisBattleWebsite.urls'
 
 TEMPLATES = [
     {
@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'web.wsgi.application'
+WSGI_APPLICATION = 'OnlineTetrisBattleWebsite.wsgi.application'
 
 
 # Database

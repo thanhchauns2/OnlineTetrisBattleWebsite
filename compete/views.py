@@ -80,14 +80,14 @@ def single(request):
     return render(request, 'compete/training/single.html', {'form': form, 'error_message': error_message})
 
 def load_agents_single_player(path1, path2):
-    temp_sys_path = sys.path[:]  # Tạo bản sao của sys.path
+    temp_sys_path = sys.path[:] 
     sys.path.append(path1)
     sys.path.append(path2)
     from agent1 import Agent as agt1
     from agent import Agent as agt2
     agent1 = agt1()
     agent2 = agt2()
-    sys.path = temp_sys_path  # Loại bỏ đường dẫn thêm vào
+    sys.path = temp_sys_path  
     return agent1, agent2
 
 @csrf_exempt
@@ -130,14 +130,14 @@ def duel(request):
     return render(request, 'compete/training/duel.html', {'form': form, 'error_message': error_message})
 
 def load_agents_duel(path1, path2):
-    temp_sys_path = sys.path[:]  # Tạo bản sao của sys.path
+    temp_sys_path = sys.path[:]
     sys.path.append(path1)
     sys.path.append(path2)
     from agent1 import Agent as agt1
     from agent2 import Agent as agt2
     agent1 = agt1()
     agent2 = agt2()
-    sys.path = temp_sys_path  # Loại bỏ đường dẫn thêm vào
+    sys.path = temp_sys_path 
     return agent1, agent2
 
 @csrf_exempt

@@ -1,77 +1,33 @@
-# **TetrisBattle**
+# OnlineTetrisBattle
 
-This project is to reproduce the popular Facebook game -- Tetris Battle (Not available playing online now). I also offer the environment of the game for training AI agent.
+Welcome to TetrisBattle, a fun and exciting way to play Tetris against your friends online! With this project, you can experience the classic game of Tetris with a twist. Battle against your friends to see who can outlast the other and achieve the highest score.
+Note: OnlineTetrisBattle is a platform for AI players.
 
-It is a highly restored version of original game, with features as follow: <br/>
-- 2 players <br/>
-- UI  <br/>
-- T spin and Tetris <br/>
-- back to back <br/>
-- garbage lines <br/>
-- alarm for attacks <br/>
+## Features
 
-Note that some of them are credited to https://github.com/xuyuwei/tetris-battle.
+Play Tetris with your friends online in real-time.
+Customize your gameplay experience with different game modes and options.
+Track your scores and progress with our leaderboard system.
+Engage in friendly competition with other players around the world.
+Enjoy a clean and intuitive user interface.
 
-The repository contains:
+## Requirements
 
-1. Single player mode
-2. Two players mode
-3. Environments for training AI agent, wrapped as OpenAI [gym](https://github.com/openai/gym) environment. (e.g. `tetris_env.py`)
+- Python 3.x
+- Django 3.x
 
-## **Demo**
+## License
 
+TetrisBattle is released under the Apache License. See the LICENSE file for more information.
 
-### Single player mode
+## References:
 
-demo the fuctions: tspin and back to back.
+<a href = "https://github.com/ylsung/TetrisBattle">ylsung - TetrisBattle</a>
 
-![single player](imgs/demo_single.gif)
+## Credits
 
-### Two players mode
+OnlineTetrisBattle was created by thanhchauns2. Special thanks to the following individuals for their contributions:
 
-demo the functions: tetris, combo and ko.
+<a href = "https://github.com/DuyMinhLe13/Double-Agent-Tetris">Duy Minh Le - TetrisBattle</a>
 
-![two player](imgs/demo_double.gif)
-
-## **Requirements**
-```
-python3 
-pygame 
-Linux system 
-```
-
-Note that pygame might have conflicts with macOS. <br/>
-
-In my case, the program works well on macOS 10.14.6 with `pygame==2.0.0.dev1` and `python==3.7.4`. However, it breaks with `pygame==1.9.4`.
-
-## **Installation**
-```
-python setup.py develop
-```
-
-## **Usage**
-
-### Single player mode
-
-```
-python -m game.tetris_game --mode single
-```
-
-### Two players mode
-
-```
-python -m game.tetris_game --mode double
-```
-
-### Usage for environments
-Please refer to `example.py`.
-
-Note: You can define your reward function in `reward_func` in `tetris_interface.py`
-
-## **Disclaimer**
-
-This work is based on the following repos: <br/>
-1. https://github.com/xuyuwei/tetris-battle
-
-## **Contact**
-Yi-Lin Sung, r06942076@ntu.edu.tw
+## Thank you for your interest in OnlineTetrisBattle. Have fun playing!

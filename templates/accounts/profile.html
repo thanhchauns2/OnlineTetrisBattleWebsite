@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Profile Page</h1>
+        <hr>
+        <h3>Personal Information</h3><br>
+        <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Username: {{ user.username }}</p>
+        <p>ID: {{ user.id }}</p>
+        <hr>
+        <h1>Change Information</h1><br>
+        <form method="get" action="/accounts/configurations/">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="cta-button">Click Me</button>
+        </form>
+    </div>
+{% endblock %}

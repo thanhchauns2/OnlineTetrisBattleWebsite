@@ -1,0 +1,9 @@
+gym==0.26.2
+opencv-python==4.7.0.72
+pandas==1.5.3
+Pillow==9.4.0
+pygame==2.4.0.dev2
+Django==4.1.7
+pytz
+requests==2.28.2
+gunicorn

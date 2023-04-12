@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if not request.user.is_authenticated %}
+        <h1 style="text-align: center;">Bạn cần đăng nhập trước khi tiếp tục.</h1><br>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <h1 style="text-align: center;">Choose mode to continue:</h1><br>
+        
+        <img src="https://raw.githubusercontent.com/thanhchauns2/TetrisBattle/main/img.jpg" alt="Tetris Battle" width = "735" height="545" />
+
+        <div class="footer-container">
+            <div class="column">
+                <div style="text-align: center;">
+
+                    <a href="/compete/training/single/" class="cta-button">Single Player</a>   
+                </div> <br><br>
+                <ul>
+                    <li>Chế độ một người chơi.</li>
+                    <li>Thi đấu với AI của hệ thống.</li>
+                    <li>Kết quả sẽ trả về dưới dạng video.</li>
+                </ul>
+            </div>
+            <div class="column">
+                <div style="text-align: center;">
+                    <a href="/compete/training/duel/" class="cta-button">Duel</a>   
+                </div> <br><br>
+                <ul>
+                    <li>Chế độ 2 người chơi.</li>
+                    <li>Người chơi sẽ cung cấp 2 AI, chúng sẽ thi đấu với nhau.</li>
+                    <li>Kết quả sẽ trả về dưới dạng video.</li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

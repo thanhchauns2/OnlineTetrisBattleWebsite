@@ -1,0 +1,15 @@
+<ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/compete/">Compete</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/privacy-policy/">Privacy</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    {% if not request.user.is_authenticated %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <li><a href="/accounts/profile">Profile</a></li>
+        <li><a href="/logout">Logout</a></li>
+    {% endif %}
+</ul>

@@ -1,0 +1,11 @@
+LICENSE
+setup.py
+TetrisBattle/__init__.py
+TetrisBattle/renderer.py
+TetrisBattle/settings.py
+TetrisBattle/tetris.py
+TetrisBattle.egg-info/PKG-INFO
+TetrisBattle.egg-info/SOURCES.txt
+TetrisBattle.egg-info/dependency_links.txt
+TetrisBattle.egg-info/requires.txt
+TetrisBattle.egg-info/top_level.txt

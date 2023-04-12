@@ -1,6 +1,6 @@
 from TetrisBattle.envs.tetris_env import TetrisDoubleEnv
 from CustomAgent import Agent
-import cv2, time
+import cv2
 import numpy as np
 import pandas as pd
 

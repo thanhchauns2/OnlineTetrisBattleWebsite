@@ -4,7 +4,6 @@ pandas==1.5.3
 Pillow==9.4.0
 pygame==2.4.0.dev2
 Django==4.1.7
-pytz
+pytz==2022.7.1
 requests==2.28.2
-gunicorn
-time
+gunicorn==20.1.0

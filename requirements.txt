@@ -5,3 +5,4 @@ gym
 pygame
 Django
 setuptools
+opencv_python_headless

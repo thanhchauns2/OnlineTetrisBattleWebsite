@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa

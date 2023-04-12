@@ -1,1 +1,0 @@
-web: gunicorn OnlineTetrisBattleWebsite.wsgi --log-file -

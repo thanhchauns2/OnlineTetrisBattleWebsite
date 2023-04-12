@@ -1,1 +1,1 @@
-web: gunicorn web.web.wsgi --log-file -
+web: gunicorn OnlineTetrisBattleWebsite.wsgi --log-file -

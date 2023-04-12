@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf import settings  # new
 from django.urls import path, include  # new
 from django.conf.urls.static import static  # new
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,4 @@ urlpatterns = [
     path('', include("registration.urls")),
     path('compete/', include("compete.urls")),
     path('accounts/', include("accounts.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + staticfiles_urlpatterns()

@@ -6,6 +6,6 @@ pygame
 Django
 setuptools
 gunicorn
-opencv_python==4.3.0.36
+opencv_python
 # opencv_python_headless
 ffmpeg

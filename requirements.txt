@@ -9,5 +9,6 @@ gunicorn
 # opencv-contrib-python
 # python-dotenv
 # opencv_python
-opencv_python_headless
+# opencv_python_headless
+opencv-contrib-python-headless
 ffmpeg

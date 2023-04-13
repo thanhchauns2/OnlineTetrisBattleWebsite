@@ -7,3 +7,4 @@ Django
 setuptools
 gunicorn
 opencv_python_headless
+ffmpeg

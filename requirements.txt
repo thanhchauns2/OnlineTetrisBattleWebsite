@@ -6,8 +6,8 @@ pygame
 Django
 setuptools
 gunicorn
-opencv-contrib-python
-python-dotenv
+# opencv-contrib-python
+# python-dotenv
 # opencv_python
-# opencv_python_headless
+opencv_python_headless
 ffmpeg

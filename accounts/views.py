@@ -3,11 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomPasswordChangeForm
 
+@csrf_exempt
 def profile(request):
     return render(request, 'accounts/profile.html')
 
+@csrf_exempt
 def configurations(request):
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)

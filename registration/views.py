@@ -2,9 +2,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 import random
 from django.contrib.auth.views import LoginView
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import UserRegistrationForm
 
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -23,9 +25,11 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
 
+@csrf_exempt
 def __login(request):
     return LoginView.as_view(template_name='registration/login.html')(request)
 
+@csrf_exempt
 def logout_view(request):
     logout(request)
     return redirect('home')

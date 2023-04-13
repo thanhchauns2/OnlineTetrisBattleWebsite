@@ -1,15 +1,20 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 
+@csrf_exempt
 def home(request):
     return render(request, 'home.html')
 
+@csrf_exempt
 def about(request):
     return render(request, 'navigations/about.html')
 
+@csrf_exempt
 def privacy(request):
     return render(request, 'navigations/privacy.html')
 
+@csrf_exempt
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')

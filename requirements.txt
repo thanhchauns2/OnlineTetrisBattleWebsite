@@ -12,3 +12,4 @@ gunicorn
 # opencv_python_headless
 opencv-contrib-python-headless
 ffmpeg
+libgtk2.0-dev

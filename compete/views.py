@@ -148,10 +148,12 @@ def load_agents_duel(path1, path2):
 def watch(request):
     videorender = VideoRender()
     link = str(uuid.uuid4()) + ".mp4"
-    # link = os.path.join('media', 'bucket', link)
-    link = os.path.join('bucket', link)
-    link = os.path.join(settings.MEDIA_ROOT, link)
-    # print(link)
+    link = os.path.join('media', 'bucket', link)
+    # link = os.path.join('bucket', link)
+    # link = os.path.join(settings.MEDIA_ROOT, link)
+    link = link.replace('\\', '/')
+    # link = os.path.abspath(link)
+    print(os.path.abspath(link))
     # print(settings.MEDIA_ROOT)
     mode = request.GET.get('mode')
     # agent1 = ag()
@@ -173,7 +175,6 @@ def watch(request):
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player1_id, 'training', 'compete', 'agent1')
             link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2')
             agent1, agent2 = load_agents_duel(link1, link2)
-    link = link.replace('\\', '/')
     if link[0] == '/':
         link = link[1:]
     videorender.render(agent1=agent1, agent2=agent2, link=link, fps=24)

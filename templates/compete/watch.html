@@ -7,7 +7,7 @@
     {% endif %}
     {% if request.user.is_authenticated %}
         <video width="735" height="545" controls>
-            <source src="{{BASE_DIR}}/{{link}}"  type="video/mp4">
+            <source src="/{{link}}"  type="video/mp4">
         </video>
         <!-- <img src = "/media/python.png"> -->
     {% endif %}

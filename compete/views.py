@@ -147,7 +147,7 @@ def load_agents_duel(path1, path2):
 @csrf_exempt
 def watch(request):
     videorender = VideoRender()
-    link = str(uuid.uuid4()) + ".mkv"
+    link = str(uuid.uuid4()) + ".mp4"
     link = os.path.join('media', 'bucket', link)
     # link = os.path.join(settings.MEDIA_ROOT, 'bucket', link)
     mode = request.GET.get('mode')

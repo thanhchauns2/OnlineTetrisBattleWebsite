@@ -149,9 +149,9 @@ def watch(request):
     videorender = VideoRender()
     link = str(uuid.uuid4()) + ".mp4"
     link = os.path.join('media', 'bucket', link)
-    # link = os.path.join(settings.MEDIA_ROOT, 'bucket', link)
-    print(link)
-    print(settings.MEDIA_ROOT)
+    link = os.path.join(settings.MEDIA_ROOT, link)
+    # print(link)
+    # print(settings.MEDIA_ROOT)
     mode = request.GET.get('mode')
     # agent1 = ag()
     # agent2 = ag()

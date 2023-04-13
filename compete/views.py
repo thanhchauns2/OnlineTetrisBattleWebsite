@@ -174,6 +174,8 @@ def watch(request):
             link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2')
             agent1, agent2 = load_agents_duel(link1, link2)
     link = link.replace('\\', '/')
+    if link[0] == '/':
+        link = link[1:]
     videorender.render(agent1=agent1, agent2=agent2, link=link, fps=24)
     print(link)
     context = {'link': link}

@@ -172,5 +172,6 @@ def watch(request):
             agent1, agent2 = load_agents_duel(link1, link2)
     videorender.render(agent1=agent1, agent2=agent2, link=link, fps=24)
     link = link.replace('\\', '/')
+    print(link)
     context = {'link': link}
     return render(request, 'compete/watch.html', context=context)

@@ -27,8 +27,8 @@ class VideoRender():
             env.take_turns()
         
         # out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc(*'DIVX'), fps, (800,600))
-        # out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), fps, (800,600))
-        out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('M', 'P', 'E', 'G'), fps, (800,600))
+        out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), fps, (800,600))
+        # out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('M', 'P', 'E', 'G'), fps, (800,600))
         # out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('h', '2', '6', '4'), fps, (800,600))
         # out = cv2.VideoWriter(link,cv2.VideoWriter_fourcc('X', '2', '6', '4'), fps, (800,600))
         for img in imgs:

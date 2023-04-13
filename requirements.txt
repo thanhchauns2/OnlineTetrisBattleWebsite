@@ -1,4 +1,4 @@
-opencv-python==4.3.0.36
+
 pandas
 numpy
 gym
@@ -6,5 +6,6 @@ pygame
 Django
 setuptools
 gunicorn
+opencv-python==4.3.0.36
 # opencv_python_headless
 ffmpeg

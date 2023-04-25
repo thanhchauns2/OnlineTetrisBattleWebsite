@@ -87,7 +87,7 @@ class Agent:
     self.refresh = 1
     self.base = None
     self.chosen_actions = {}
-    self.greys = []
+    self.sim = []
     self.current_actions = {
       'left' : 0,
       'right' : 0,
@@ -159,15 +159,6 @@ class Agent:
     self.base = self.strategy[0][0]
     self.touch = 100
 
-  def get_grey(self, state):
-    greys = []
-    EPSILON = 0.0001
-    for i in range(10):
-      for j in range(20):
-        if abs(state[j][i] - 0.3) < EPSILON:
-          greys.append((i, j))
-    return greys
-
   def choose_action(self, obs):
 
     # lấy thông tin từ obs
@@ -179,17 +170,14 @@ class Agent:
       self.turn = 1
       return 0
     
+    pd.DataFrame(self.sim).to_csv("data2.csv")
 
     # Nếu vẫn còn hành động phải làm
-    if self.greys != []:
-      # if self.chosen_actions['rotate'] > 0:
-      #   print(self.chosen_actions)
-      print(self.greys)
-      print(self.get_grey(self.board))
-      # print(self.chosen_actions)
-      if self.get_grey(self.board) == self.greys:
+    if self.sim != []:
+      print(100)
+      if self.simulate(self.board) == self.sim:
         self.chosen_actions = {}
-        self.greys = []
+        self.sim = []
         return 2
       elif self.chosen_actions['rotate'] > 0:
         self.chosen_actions['rotate'] -= 1
@@ -202,32 +190,36 @@ class Agent:
       elif self.chosen_actions['right'] > 0:
         self.chosen_actions['right'] -= 1
         return 5
-      # else:
-      #   exit(0)
+      else:
+        self.chosen_actions['left'] = 10
+        self.chosen_actions['right'] = 10
+        return 3
 
     # print(len(self.strategy))
-    pd.DataFrame(self.strategy).to_csv("data2.csv")
     cur_piece = self.pieces[0]
 
     # Nếu đây là vị trí bắt đầu
+    # print(self.board)
+    sim = self.simulate(deepcopy(self.board))
+    # sim = deepcopy(self.board)
+    # print(simulate)
+
     if self.refresh:
-      self.base = deepcopy(self.board)
+      self.base = deepcopy(sim)
       self.refresh = 0
-      self.strategy.append((deepcopy(self.board), deepcopy(self.current_actions)))
+      self.strategy.append((deepcopy(sim), deepcopy(self.current_actions)))
       return 6
     # Ngược lại
     else:
       # Kiểm tra xem state hiện tại có phải state bắt đầu không: Nếu có nghĩa là đã đi 1 nửa vòng
       # Nếu đây là lần thứ 2 chạm state đầu tiên, nghĩa là đã duyệt toàn bộ các state cần tìm
-      # if self.board == self.strategy[0][0]:
-      if self.board == self.base:
+      print(101)
+      if sim == self.base:
         self.touch += 1
-        # print(self.touch)
-        # print(cur_piece, self.touch)
+        print(self.touch)
         if self.touch == 2:
           if cur_piece == self.PIECE_TYPE2NUM['O']:
             self.end_phase()
-            # return 0
           else:
             self.current_actions['rotate'] += 1
             self.refresh = 1
@@ -246,17 +238,13 @@ class Agent:
         elif self.touch == 8:
           self.end_phase()
           return 3
-      # print(self.PIECE_NUM2TYPE[cur_piece], self.touch)
-      # print(self.current_actions)
-      # print(self.pieces)
       if self.touch > 10: # Đã duyệt hết, chọn ra vị trí tối ưu
         self.evaluate()
         self.renew()
+        print(102)
         return 0
           
-      if self.board != self.strategy[-1][0]:
-        # print(self.orient)
-        # print(self.board)
+      if sim != self.strategy[-1][0]:
         if self.orient == 'left':
           if self.current_actions['right'] > 0:
             self.current_actions['right'] -= 1
@@ -274,26 +262,45 @@ class Agent:
           self.orient = 'left'
       
       # Kiểm tra xem state hiện tại đã có trong strategy chưa:
-      check = any(x == (self.board, self.current_actions) for x in self.strategy)
+      check = any(x == (sim, self.current_actions) for x in self.strategy)
       if check == 0:
-        self.strategy.append((deepcopy(self.board), deepcopy(self.current_actions)))
+        self.strategy.append((deepcopy(sim), deepcopy(self.current_actions)))
 
+      print(103)
       if self.orient == 'left':
         return 6
       else:
         return 5
 
     # return random.randint(0, 7)
+
+  def simulate(self, state):
+    # s = deepcopy(state)
+    s = state[::-1]
+
+    EPSILON = 0.0001
+
+    for i in range(10):
+      for j in range(20):
+        if abs(s[j][i] - 0.7) < EPSILON:
+          s[j][i] = 0
+        if abs(s[j][i] - 0.3) < EPSILON:
+          s[j][i] = 1
+    s = s[::-1]
+    
+    s = self.clear_rows(s)
+
+    return s
   
   def clear_rows(self, board):
     new_board = []
-    board = board[::-1]
-    for row in board:
+    b = board[::-1]
+    for row in b:
       if sum(row) < 10:
         new_board.append(row[:])
     while len(new_board) < 20:
       new_board.append(self.blank_row[:])
-    board = board[::-1]
+    b = b[::-1]
     new_board = new_board[::-1]
     return new_board
   
@@ -310,19 +317,7 @@ class Agent:
         if abs(state[j][i] - 0.3) < EPSILON:
           state[j][i] = 1
     
-    f, s = -1, -1
-    for i in range(10):
-      for j in range(20):
-        if abs(state[j][i] - 0.7) < EPSILON:
-          f = j
-          break
-      for j in range(20):
-        if abs(state[j][i] - 0.3) < EPSILON:
-          s = j
-          break
-      if f > -1:
-        break
-
+    state = self.clear_rows(state)
 
     height = 0
     for i in range(10):
@@ -345,8 +340,7 @@ class Agent:
   
   # Hàm để drop "thử" thanh tetris xuống, và tính toán số điểm của nó
   def extract(self, state):
-    s = self.clear_rows(deepcopy(state))
-    return self.calculate(s)
+    return self.calculate(deepcopy(state))
 
   # Hàm lấy ra state tốt nhất trong strategy
   def evaluate(self):
@@ -358,8 +352,9 @@ class Agent:
         s = state
         a = action
         # print(p, s, a)
-        a['left'] = 8
-        a['right'] = 8
+        a['left'] = 10
+        a['right'] = 10
         # a['rotate'] = 3
-    self.greys = self.get_grey(s)
+    # self.sim = self.simulate(s)
+    self.sim = deepcopy(s)
     self.chosen_actions = deepcopy(a)

@@ -30,6 +30,7 @@ while not done:
     # print(_)
     env.take_turns()
     cv2.imshow('image', img)
+    cv2.imwrite('img.jpg',img)
     cv2.waitKey(2)
 
 # print(state.shape)
@@ -46,7 +47,6 @@ pd.DataFrame(state2).to_csv("data.csv")
 
 out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*'DIVX'), 25, (800,600))
 for img in imgs:
-    cv2.imwrite('img.jpg',img)
     out.write(img)
 out.release()
 

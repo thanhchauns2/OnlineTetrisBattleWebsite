@@ -1,0 +1,3 @@
+- Thêm user vào video kết quả
+- Đổi sang file zip
+- Tài khoản ban tổ chức

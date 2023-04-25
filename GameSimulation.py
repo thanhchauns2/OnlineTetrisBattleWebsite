@@ -1,14 +1,22 @@
 from TetrisBattle.envs.tetris_env import TetrisDoubleEnv
 from CustomAgent import Agent
-import cv2, time
+import cv2, time, random
 import numpy as np
 import pandas as pd
+
+class Agent2:
+    def __init__(self) -> None:
+        pass
+
+    def choose_action(self, obs):
+        return 6
+        # return random.randint(0, 7)
 
 env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
 
 done = False
 state = env.reset()
-agent_list = [Agent(), Agent()]
+agent_list = [Agent(), Agent2()]
 
 imgs = []
 
@@ -18,7 +26,7 @@ while not done:
     imgs.append(img)
     action = agent_list[env.game_interface.getCurrentPlayerID()].choose_action(state)
     state, reward, done, _ = env.step(action)
-    print(_)
+    # print(_)
     env.take_turns()
     cv2.imshow('image', img)
     cv2.waitKey(2)

@@ -4,5 +4,5 @@ class Agent:
     pass
 
   def choose_action(self, obs):
-    return 0
-    # return random.randint(0, 7)
+    # return 0
+    return random.randint(0, 7)

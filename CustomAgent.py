@@ -184,8 +184,8 @@ class Agent:
     if self.greys != []:
       # if self.chosen_actions['rotate'] > 0:
       #   print(self.chosen_actions)
-      # print(self.greys)
-      # print(self.board)
+      print(self.greys)
+      print(self.get_grey(self.board))
       # print(self.chosen_actions)
       if self.get_grey(self.board) == self.greys:
         self.chosen_actions = {}
@@ -202,8 +202,8 @@ class Agent:
       elif self.chosen_actions['right'] > 0:
         self.chosen_actions['right'] -= 1
         return 5
-      else:
-        exit(0)
+      # else:
+      #   exit(0)
 
     # print(len(self.strategy))
     pd.DataFrame(self.strategy).to_csv("data2.csv")

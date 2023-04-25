@@ -9,7 +9,8 @@ class Agent2:
         pass
 
     def choose_action(self, obs):
-        return 6
+        return 0
+        # return random.randint(3, 6)
         # return random.randint(0, 7)
 
 env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")

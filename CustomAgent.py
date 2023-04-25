@@ -87,7 +87,7 @@ class Agent:
     self.refresh = 1
     self.base = None
     self.chosen_actions = {}
-    self.chosen_board = []
+    self.greys = []
     self.current_actions = {
       'left' : 0,
       'right' : 0,
@@ -159,6 +159,15 @@ class Agent:
     self.base = self.strategy[0][0]
     self.touch = 100
 
+  def get_grey(self, state):
+    greys = []
+    EPSILON = 0.0001
+    for i in range(10):
+      for j in range(20):
+        if abs(state[j][i] - 0.3) < EPSILON:
+          greys.append((i, j))
+    return greys
+
   def choose_action(self, obs):
 
     # lấy thông tin từ obs
@@ -172,27 +181,29 @@ class Agent:
     
 
     # Nếu vẫn còn hành động phải làm
-    if self.chosen_board != []:
+    if self.greys != []:
       # if self.chosen_actions['rotate'] > 0:
       #   print(self.chosen_actions)
-      # print(self.chosen_board)
+      # print(self.greys)
       # print(self.board)
       # print(self.chosen_actions)
-      if self.board == self.chosen_board:
+      if self.get_grey(self.board) == self.greys:
         self.chosen_actions = {}
-        self.chosen_board = []
+        self.greys = []
         return 2
+      elif self.chosen_actions['rotate'] > 0:
+        self.chosen_actions['rotate'] -= 1
+        # self.chosen_actions['left'] = 8
+        # self.chosen_actions['right'] = 8
+        return 3
       elif self.chosen_actions['left'] > 0:
         self.chosen_actions['left'] -= 1
         return 6
       elif self.chosen_actions['right'] > 0:
         self.chosen_actions['right'] -= 1
         return 5
-      elif self.chosen_actions['rotate'] > 0:
-        self.chosen_actions['rotate'] -= 1
-        self.chosen_actions['left'] = 8
-        self.chosen_actions['right'] = 8
-        return 3
+      else:
+        exit(0)
 
     # print(len(self.strategy))
     pd.DataFrame(self.strategy).to_csv("data2.csv")
@@ -346,9 +357,9 @@ class Agent:
         p = points
         s = state
         a = action
-        print(p, s, a)
+        # print(p, s, a)
         a['left'] = 8
         a['right'] = 8
-        a['rotate'] = 3
-    self.chosen_board = deepcopy(s)
+        # a['rotate'] = 3
+    self.greys = self.get_grey(s)
     self.chosen_actions = deepcopy(a)

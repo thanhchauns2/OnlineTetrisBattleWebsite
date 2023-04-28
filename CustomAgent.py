@@ -62,7 +62,7 @@ class Agent:
   }
   blank_row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-  def __init__(self, turn = 0):
+  def __init__(self, lines = 50, holes = -100, bumpiness = -40, height = -10, turn = 0):
     '''
     Strategy sẽ như sau:
     - Đưa khối qua trái xa nhất có thể
@@ -78,6 +78,10 @@ class Agent:
     - Hàm evaluate cần được cải tiến
     - CHƯA sử dụng được T-spin
     '''
+    self.HEIGHT_POINTS = height
+    self.LINES_POINTS = lines
+    self.HOLES_POINTS = holes
+    self.BUMPINESS_POINTS = bumpiness
     self.turn  = turn
     self.board = []
     self.holding = 0
@@ -115,27 +119,6 @@ class Agent:
     self.holing = 0
     self.pieces = []
 
-    # if self.turn == 1:
-    #   # get the board
-    #   for i in range(20):
-    #     row = []
-    #     for j in range(10):
-    #       row.append(obs[i][j][0])
-    #     self.board.append(row)
-      
-    #   # get the holding piece
-    #   for i in range(10, 17):
-    #     if obs[0][i][0] == 1:
-    #       self.holding = i - 9
-      
-    #   # get next 5 pieces
-    #   for i in range(10, 17):
-    #     for j in range(1, 6):
-    #       if obs[j][i][0] == 1:
-    #         self.pieces.append(i - 9)
-    #         break
-    # else:
-    #   # get the board
     for i in range(20):
       row = []
       for j in range(17, 27):
@@ -174,7 +157,6 @@ class Agent:
 
     # Nếu vẫn còn hành động phải làm
     if self.sim != []:
-      print(100)
       if self.simulate(self.board) == self.sim:
         self.chosen_actions = {}
         self.sim = []
@@ -195,14 +177,11 @@ class Agent:
         self.chosen_actions['right'] = 10
         return 3
 
-    # print(len(self.strategy))
     cur_piece = self.pieces[0]
 
     # Nếu đây là vị trí bắt đầu
-    # print(self.board)
     sim = self.simulate(deepcopy(self.board))
     # sim = deepcopy(self.board)
-    # print(simulate)
 
     if self.refresh:
       self.base = deepcopy(sim)
@@ -213,10 +192,8 @@ class Agent:
     else:
       # Kiểm tra xem state hiện tại có phải state bắt đầu không: Nếu có nghĩa là đã đi 1 nửa vòng
       # Nếu đây là lần thứ 2 chạm state đầu tiên, nghĩa là đã duyệt toàn bộ các state cần tìm
-      print(101)
       if sim == self.base:
         self.touch += 1
-        print(self.touch)
         if self.touch == 2:
           if cur_piece == self.PIECE_TYPE2NUM['O']:
             self.end_phase()
@@ -241,7 +218,6 @@ class Agent:
       if self.touch > 10: # Đã duyệt hết, chọn ra vị trí tối ưu
         self.evaluate()
         self.renew()
-        print(102)
         return 0
           
       if sim != self.strategy[-1][0]:
@@ -266,7 +242,6 @@ class Agent:
       if check == 0:
         self.strategy.append((deepcopy(sim), deepcopy(self.current_actions)))
 
-      print(103)
       if self.orient == 'left':
         return 6
       else:
@@ -288,21 +263,23 @@ class Agent:
           s[j][i] = 1
     s = s[::-1]
     
-    s = self.clear_rows(s)
+    s, l = self.clear_rows(s)
 
     return s
   
   def clear_rows(self, board):
+    lines_cleared = 0
     new_board = []
     b = board[::-1]
     for row in b:
       if sum(row) < 10:
         new_board.append(row[:])
     while len(new_board) < 20:
+      lines_cleared += 1
       new_board.append(self.blank_row[:])
     b = b[::-1]
     new_board = new_board[::-1]
-    return new_board
+    return new_board, lines_cleared
   
   # Hàm chính để tính toán số điểm của một state
   def calculate(self, state):
@@ -317,14 +294,22 @@ class Agent:
         if abs(state[j][i] - 0.3) < EPSILON:
           state[j][i] = 1
     
-    state = self.clear_rows(state)
+    state, lines_cleared = self.clear_rows(state)
 
     height = 0
+    h = []
     for i in range(10):
+      x = 0
       for j in range(20):
-        # print(state, j, i)
         if state[j][i] == 1:
-          height = max(height, j)
+          x = max(x, j)
+      h.append(x)
+    
+    height = max(h)
+
+    bumpiness = 0
+    for i in range(len(h) - 1):
+      bumpiness += abs(h[i] - h[i + 1])
     
     holes = 0
     for i in range(10):
@@ -335,7 +320,7 @@ class Agent:
         if state[j][i] == 1:
           exist = 1
 
-    points = -height * 10 - holes * 100
+    points = height * self.HEIGHT_POINTS + holes * self.HOLES_POINTS + lines_cleared * self.LINES_POINTS + bumpiness * self.BUMPINESS_POINTS
     return points
   
   # Hàm để drop "thử" thanh tetris xuống, và tính toán số điểm của nó
@@ -351,7 +336,6 @@ class Agent:
         p = points
         s = state
         a = action
-        # print(p, s, a)
         a['left'] = 10
         a['right'] = 10
         # a['rotate'] = 3

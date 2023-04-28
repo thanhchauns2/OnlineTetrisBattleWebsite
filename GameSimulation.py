@@ -17,7 +17,18 @@ env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
 
 done = False
 state = env.reset()
-agent_list = [Agent(), Agent2()]
+agent_list = [Agent(
+                height= -0.510066,
+                lines = 0.760666,
+                holes = -0.35663,
+                bumpiness = -0.184483
+            ), 
+            Agent(
+                height= -0.510066,
+                lines = 0.760666,
+                holes = -0.35663,
+                bumpiness = -0.184483
+            ),]
 
 imgs = []
 
@@ -27,7 +38,7 @@ while not done:
     imgs.append(img)
     action = agent_list[env.game_interface.getCurrentPlayerID()].choose_action(state)
     state, reward, done, _ = env.step(action)
-    # print(_)
+    print(_)
     env.take_turns()
     cv2.imshow('image', img)
     cv2.imwrite('img.jpg',img)

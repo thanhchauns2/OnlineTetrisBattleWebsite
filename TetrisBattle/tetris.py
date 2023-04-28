@@ -625,7 +625,16 @@ class Tetris(object):
         b = block.now_block()
 
         for i in range(len(self.grid)):
-            return_grids[i] = np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32)
+            # return_grids[i] = np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32)
+            # return_grids[i] = np.pad(np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32), [(0, 1)], mode='constant')
+            grid_i = np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32)
+            if grid_i.shape[0] < 20:
+                grid_i = np.concatenate([grid_i, np.zeros((20 - grid_i.shape[0],), dtype=np.float32)])
+            elif grid_i.shape[0] > 20:
+                # grid_i = grid_i[:20]
+                grid_i = grid_i[-20:]
+                # grid_i[grid_i < 1] = 1
+            return_grids[i] = grid_i
         return_grids[return_grids > 0] = 1
 
         add_y = hardDrop(self.grid, self.block, self.px, self.py)

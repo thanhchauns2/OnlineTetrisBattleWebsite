@@ -107,6 +107,8 @@ def main():
     for epoch in range(EPOCHS):
         for x in range(POPULATION):
             for y in range(x + 1, POPULATION):
+                if y >= POPULATION:
+                    continue
                 print(pool[x][0].LINES_POINTS, pool[x][0].HOLES_POINTS, pool[x][0].BUMPINESS_POINTS, pool[x][0].HEIGHT_POINTS)
                 print(pool[y][0].LINES_POINTS, pool[y][0].HOLES_POINTS, pool[y][0].BUMPINESS_POINTS, pool[y][0].HEIGHT_POINTS)
                 results = duel(pool[x][0], pool[y][0])

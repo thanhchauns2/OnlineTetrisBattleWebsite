@@ -7,19 +7,19 @@
     {% endif %}
     {% if request.user.is_authenticated %}
         
-        <img src="https://raw.githubusercontent.com/thanhchauns2/TetrisBattle/main/img.jpg" alt="Tetris Battle" width = "735" height="545" />
+        <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width = "735" height="545" />
 
-        <p>Bạn sẽ phải implement file agent.py chứa class Agent. File Agent mẫu có thể đọc ở <a href="https://github.com/thanhchauns2/OnlineTetrisBattle/blob/main/agent.py">đây</a>.</p>
-        <h2>LƯU Ý: Tên của file phải là "agent1.py" và "agent2.py"</h2>
+        <p>Bạn sẽ phải implement file agent.zip chứa class Agent. File Agent mẫu có thể đọc ở <a href="https://github.com/thanhchauns2/OnlineTetrisBattle/blob/main/agent.py">đây</a>.</p>
+        <h2>LƯU Ý: Tên của file phải là "agent1.zip" và "agent2.zip"</h2>
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-                <label for="file1">agent1.py</label>
+                <label for="file1">agent1.zip</label>
                 <input type="file" class="form-control-file" id="file1" name="file1">
             </div>
             <div class="form-group">
-                <label for="file2">agent2.py</label>
+                <label for="file2">agent2.zip</label>
                 <input type="file" class="form-control-file" id="file2" name="file2">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

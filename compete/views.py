@@ -1,8 +1,9 @@
+import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
-import os
+import os, shutil, zipfile
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -30,14 +31,14 @@ def competition(request):
         user = request.user
         if form.is_valid():
             file = form.cleaned_data['file']
-            if file.name != 'agent.py':
-                error_message = 'Invalid file type. Only agent.py is allowed.'
+            if file.name != 'agent.zip':
+                error_message = 'Invalid file type. Only agent.zip is allowed.'
             else:
                 
                 pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'compete', 'agent1')
                 if not os.path.exists(pool_path):
                     os.makedirs(pool_path)
-                file.name = 'agent1.py'
+                file.name = 'agent1.zip'
                 file_path = os.path.join(pool_path, file.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
@@ -46,7 +47,7 @@ def competition(request):
                 pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'compete', 'agent2')
                 if not os.path.exists(pool_path):
                     os.makedirs(pool_path)
-                file.name = 'agent2.py'
+                file.name = 'agent2.zip'
                 file_path = os.path.join(pool_path, file.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
@@ -65,14 +66,14 @@ def single(request):
         user = request.user
         if form.is_valid():
             file = form.cleaned_data['file']
-            if file.name != 'agent.py':
-                error_message = 'Invalid file type. Only agent.py is allowed.'
+            if file.name != 'agent.zip':
+                error_message = 'Invalid file type. Only agent.zip is allowed.'
             else:
 
                 pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'single', 'agent1')
                 if not os.path.exists(pool_path):
                     os.makedirs(pool_path)
-                file.name = 'agent1.py'
+                file.name = 'agent1.zip'
                 file_path = os.path.join(pool_path, file.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
@@ -80,18 +81,6 @@ def single(request):
                 return redirect('/compete/watch/?mode=single&player=' + str(user.id))
 
     return render(request, 'compete/training/single.html', {'form': form, 'error_message': error_message})
-
-@csrf_exempt
-def load_agents_single_player(path1, path2):
-    temp_sys_path = sys.path[:] 
-    sys.path.append(path1)
-    sys.path.append(path2)
-    from agent1 import Agent as agt1
-    from agent import Agent as agt2
-    agent1 = agt1()
-    agent2 = agt2()
-    sys.path = temp_sys_path  
-    return agent1, agent2
 
 @csrf_exempt
 def duel(request):
@@ -102,28 +91,28 @@ def duel(request):
         user = request.user
         if form.is_valid():
             file = form.cleaned_data['file1']
-            if file.name != 'agent1.py':
-                error_message = 'Invalid file type. Only agent1.py and agent2.py are allowed.'
+            if file.name != 'agent1.zip':
+                error_message = 'Invalid file type. Only agent1.zip is allowed.'
             else:
 
-                pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'duel', 'agent2')
+                pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'duel', 'agent1')
                 if not os.path.exists(pool_path):
                     os.makedirs(pool_path)
-                file.name = 'agent1.py'
+                file.name = 'agent1.zip'
                 file_path = os.path.join(pool_path, file.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
                         destination.write(chunk)
             
             file = form.cleaned_data['file2']
-            if file.name != 'agent2.py':
-                error_message = 'Invalid file type. Only agent1.py and agent2.py are allowed.'
+            if file.name != 'agent2.zip':
+                error_message = 'Invalid file type. Only agent2.zip is allowed.'
             else:
 
                 pool_path = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', str(user.id), 'training', 'duel', 'agent2')
                 if not os.path.exists(pool_path):
                     os.makedirs(pool_path)
-                file.name = 'agent2.py'
+                file.name = 'agent2.zip'
                 file_path = os.path.join(pool_path, file.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in file.chunks():
@@ -132,52 +121,73 @@ def duel(request):
 
     return render(request, 'compete/training/duel.html', {'form': form, 'error_message': error_message})
 
-@csrf_exempt
-def load_agents_duel(path1, path2):
-    temp_sys_path = sys.path[:]
-    sys.path.append(path1)
-    sys.path.append(path2)
-    from agent1 import Agent as agt1
-    from agent2 import Agent as agt2
-    agent1 = agt1()
-    agent2 = agt2()
-    sys.path = temp_sys_path 
-    return agent1, agent2
+def generate_game(link1, link2, link, player1_id, player2_id):
+    # Copy 2 file zip vào link bucket
+    zipfile1 = os.path.join(link, 'agent1.zip')
+    zipfile2 = os.path.join(link, 'agent2.zip')
+    shutil.copy(link1, zipfile1)
+    shutil.copy(link2, zipfile2)
+    with zipfile.ZipFile(zipfile1, 'r') as zip_ref:
+        zip_ref.extractall(link)
+    with zipfile.ZipFile(zipfile2, 'r') as zip_ref:
+        zip_ref.extractall(link)
+    
+    file_path = os.path.join(link, 'judge.py')
+    current_path = os.path.abspath('')
+    video_path = os.path.join(link, 'outpy.webm')
+
+    with open(file_path, 'w') as file:
+        file.write('print(\'Hello!\')\n')
+        file.write('import sys\n')
+        # file.write('import n' + str(player1_id) + '.Agent\n')
+        # file.write('import n' + str(player2_id) + '.Agent\n')
+        # file.write('agent1 = n' + str(player1_id) + '.Agent.Agent()\n')
+        # file.write('agent2 = n' + str(player2_id) + '.Agent.Agent()\n')
+        file.write('import agent1.Agent\n')
+        file.write('import agent2.Agent\n')
+        file.write('agent1 = agent1.Agent.Agent()\n')
+        file.write('agent2 = agent2.Agent.Agent()\n')
+        file.write('sys.path.append(\'' + current_path + '\')\n')
+        file.write('from VideoRender import VideoRender\n')
+        file.write('videorender =  VideoRender()\n')
+        file.write('videorender.render(agent1=agent1, agent2=agent2, link=\'' + video_path.replace('\\', '\\\\') + '\', fps=24)\n')
+
+    os.system('python3 ' + file_path)
+
+    return video_path
 
 @csrf_exempt
 def watch(request):
-    videorender = VideoRender()
-    link = str(uuid.uuid4()) + ".webm"
-    link = os.path.join('media', 'bucket', link)
-    # link = os.path.join('bucket', link)
-    # link = os.path.join(settings.MEDIA_ROOT, link)
-    link = link.replace('\\', '/')
-    # link = os.path.abspath(link)
-    print(os.path.abspath(link))
-    # print(settings.MEDIA_ROOT)
     mode = request.GET.get('mode')
-    # agent1 = ag()
-    # agent2 = ag()
     if request.method == 'GET':
         if mode == 'single':
             player_id = request.GET.get('player')
-            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'single', 'agent1')
-            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all')
-            agent1, agent2 = load_agents_single_player(link1, link2)
+            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'single', 'agent1', 'agent1.zip')
+            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all', '0')
+            player1_id = player_id
+            player2_id = 0
         elif mode == 'duel':
             player_id = request.GET.get('player')
-            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent1')
-            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent2')
-            agent1, agent2 = load_agents_duel(link1, link2)
+            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent1', 'agent1.zip')
+            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent2', 'agent2.zip')
+            player1_id = player_id
+            player2_id = player_id
         elif mode == 'compete':
             player1_id = request.GET.get('player1')
             player2_id = request.GET.get('player2')
-            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player1_id, 'training', 'compete', 'agent1')
-            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2')
-            agent1, agent2 = load_agents_duel(link1, link2)
-    if link[0] == '/':
-        link = link[1:]
-    videorender.render(agent1=agent1, agent2=agent2, link=link, fps=24)
+            link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player1_id, 'training', 'compete', 'agent1', 'agent1.zip')
+            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2', 'agent2.zip')
+    link = str(uuid.uuid4())
+    now = datetime.datetime.now()
+    link = now.strftime("%d-%m-%Y-%H-%M-%S") + "-" + str(player1_id) + '-' + str(player2_id) 
+    # link = ''
+    # link = link + ".webm"
+    link = os.path.join('media', 'bucket', link)
+    link = link.replace('\\', '/')
+    if not os.path.exists(link):
+        os.makedirs(link)
+    print(os.path.abspath(link))
+    link = generate_game(link1, link2, link, player1_id, player2_id)
     print(link)
     context = {'link': link}
     return render(request, 'compete/watch.html', context=context)

@@ -1,0 +1,2 @@
+now_player
+winner

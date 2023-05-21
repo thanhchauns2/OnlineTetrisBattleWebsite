@@ -9,7 +9,7 @@ class VideoRender():
     def __init__(self) -> None:
         pass
 
-    def render(self, agent1, agent2, link = 'outpy.avi', fps = 24):
+    def render(self, agent1, agent2, link = 'outpy.webm', fps = 24):
 
         agent_list = [agent1, agent2]
         env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
@@ -37,6 +37,9 @@ class VideoRender():
             cv2.imwrite('img.jpg',img)
             out.write(img)
         out.release()
+
+        with open(link[:-4] + 'txt', 'w') as file:
+            file.write(str(_['winner']) + '\n')
 
         # cv2.destroyAllWindows()
 

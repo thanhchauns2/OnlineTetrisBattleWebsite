@@ -1,5 +1,6 @@
 from TetrisBattle.envs.tetris_env import TetrisDoubleEnv
-from CustomAgent import Agent
+# from CustomAgent import Agent
+from Agent import Agent
 import cv2, time, random
 import numpy as np
 import pandas as pd
@@ -17,18 +18,22 @@ env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
 
 done = False
 state = env.reset()
-agent_list = [Agent(
-                height= -0.510066,
-                lines = 0.760666,
-                holes = -0.35663,
-                bumpiness = -0.184483
-            ), 
-            Agent(
-                height= -0.510066,
-                lines = 0.760666,
-                holes = -0.35663,
-                bumpiness = -0.184483
-            ),]
+agent_list = [
+            # Agent(
+            #     height= -0.510066,
+            #     lines = 0.760666,
+            #     holes = -0.35663,
+            #     bumpiness = -0.184483
+            # ), 
+            # Agent(
+            #     height= -0.510066,
+            #     lines = 0.760666,
+            #     holes = -0.35663,
+            #     bumpiness = -0.184483
+            # )
+            Agent(),
+            Agent()
+            ,]
 
 imgs = []
 

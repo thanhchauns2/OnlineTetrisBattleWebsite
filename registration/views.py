@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 import random
 from django.contrib.auth.views import LoginView
 from django.views.decorators.csrf import csrf_exempt
-
 from .forms import UserRegistrationForm
 
 @csrf_exempt

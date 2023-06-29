@@ -29,3 +29,7 @@ def contact(request):
         )
         return redirect('home')
     return render(request, 'navigations/contact.html')
+
+@csrf_exempt
+def scoreboard(request):
+    return render(request, 'navigations/scoreboard.html')

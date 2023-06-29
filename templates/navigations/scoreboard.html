@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 style="text-align: center;">Scoreboard</h1><br><br>
+
+    <table class="scoreboard-table">
+        <thead>
+            <tr>
+                <th>Thứ hạng</th>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Elo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+                <tr>
+                    <td>{{ profile.rank }}</td>
+                    <td>{{ profile.id }}</td>
+                    <td>{{ profile.name }}</td>
+                    <td>{{ profile.elo }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

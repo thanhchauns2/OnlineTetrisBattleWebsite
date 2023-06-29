@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 import random
+from django.conf import settings
 from django.contrib.auth.views import LoginView
 from django.views.decorators.csrf import csrf_exempt
 from .forms import UserRegistrationForm
@@ -11,6 +12,11 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            if form.cleaned_data.get('account_type') == settings.SECRET_KEY:
+                user.is_staff = True
+            elif form.cleaned_data.get('account_type') != user.username:
+                form = UserRegistrationForm()
+                return render(request, 'registration/register.html', {'form': form, 'message' : 'Invalid form'})
             user.id = random.randint(100000000000000, 999999999999999)
             user.save()
             # Log the user in

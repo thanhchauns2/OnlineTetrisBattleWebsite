@@ -1,16 +1,8 @@
-import datetime
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+import datetime, os, shutil, zipfile
 from django.shortcuts import render, redirect
-from django.contrib.auth.views import LoginView
-import os, shutil, zipfile
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from VideoRender import VideoRender
-from CustomAgent import Agent as ag
-import importlib
-import uuid, sys
 from .models import *
 from .forms import *
 
@@ -129,8 +121,12 @@ def generate_game(link1, link2, link, player1_id, player2_id):
     shutil.copy(link2, zipfile2)
     with zipfile.ZipFile(zipfile1, 'r') as zip_ref:
         zip_ref.extractall(link)
+        agentlink = os.path.join(link, 'agent')
+        os.rename(agentlink, os.path.join(link, 'agent1'))
     with zipfile.ZipFile(zipfile2, 'r') as zip_ref:
         zip_ref.extractall(link)
+        agentlink = os.path.join(link, 'agent')
+        os.rename(agentlink, os.path.join(link, 'agent2'))
     
     file_path = os.path.join(link, 'judge.py')
     current_path = os.path.abspath('')
@@ -139,10 +135,6 @@ def generate_game(link1, link2, link, player1_id, player2_id):
     with open(file_path, 'w') as file:
         file.write('print(\'Hello!\')\n')
         file.write('import sys\n')
-        # file.write('import n' + str(player1_id) + '.Agent\n')
-        # file.write('import n' + str(player2_id) + '.Agent\n')
-        # file.write('agent1 = n' + str(player1_id) + '.Agent.Agent()\n')
-        # file.write('agent2 = n' + str(player2_id) + '.Agent.Agent()\n')
         file.write('import agent1.Agent\n')
         file.write('import agent2.Agent\n')
         file.write('agent1 = agent1.Agent.Agent()\n')
@@ -150,7 +142,7 @@ def generate_game(link1, link2, link, player1_id, player2_id):
         file.write('sys.path.append(\'' + current_path + '\')\n')
         file.write('from VideoRender import VideoRender\n')
         file.write('videorender =  VideoRender()\n')
-        file.write('videorender.render(agent1=agent1, agent2=agent2, link=\'' + video_path.replace('\\', '\\\\') + '\', fps=24)\n')
+        file.write('videorender.render(agent1=agent1, agent2=agent2, link=\'' + video_path.replace('\\', '\\\\') + '\', fps=100)\n')
 
     os.system('python3 ' + file_path)
 
@@ -163,31 +155,55 @@ def watch(request):
         if mode == 'single':
             player_id = request.GET.get('player')
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'single', 'agent1', 'agent1.zip')
-            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all', '0')
+            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all', '0', 'agent2.zip')
             player1_id = player_id
             player2_id = 0
+            name_1 = 'Participant'
+            name_2 = 'System'
         elif mode == 'duel':
             player_id = request.GET.get('player')
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent1', 'agent1.zip')
             link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'duel', 'agent2', 'agent2.zip')
             player1_id = player_id
             player2_id = player_id
+            name_1 = 'Agent 1'
+            name_2 = 'Agent 2'
         elif mode == 'compete':
             player1_id = request.GET.get('player1')
             player2_id = request.GET.get('player2')
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player1_id, 'training', 'compete', 'agent1', 'agent1.zip')
             link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2', 'agent2.zip')
-    link = str(uuid.uuid4())
+            name_1 = 'Agent 1'
+            name_2 = 'Agent 2'
     now = datetime.datetime.now()
     link = now.strftime("%d-%m-%Y-%H-%M-%S") + "-" + str(player1_id) + '-' + str(player2_id) 
-    # link = ''
-    # link = link + ".webm"
     link = os.path.join('media', 'bucket', link)
     link = link.replace('\\', '/')
     if not os.path.exists(link):
         os.makedirs(link)
-    print(os.path.abspath(link))
-    link = generate_game(link1, link2, link, player1_id, player2_id)
-    print(link)
-    context = {'link': link}
+    video_link = generate_game(link1, link2, link, player1_id, player2_id)
+    result_link = video_link[:-4] + 'txt'
+    try:
+        with open(result_link, 'r') as file:
+            content = file.read()
+            if content[0] == '0':
+                id = player1_id
+                winner = 1
+                name = name_1
+            else:
+                id = player2_id
+                winner = 2
+                name = name_2
+    except FileNotFoundError:
+        print(f"File '{result_link}' not found.")
+    context = {'link': video_link, 'winner': winner, 'id': id, 'name': name}
     return render(request, 'compete/watch.html', context=context)
+
+@csrf_exempt
+def tournament(request):
+    error_message = ''
+    if request.method == 'POST':
+        ID1 = request.POST.get('ID1')
+        ID2 = request.POST.get('ID2')
+        return redirect('/compete/watch/?mode=compete&player1=' + str(ID1) + '&player2='+str(ID2))
+    return render(request, 'compete/tournament.html', {'error_message': error_message})

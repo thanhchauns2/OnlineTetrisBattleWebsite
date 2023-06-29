@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if not request.user.is_authenticated %}
+        <h1 style="text-align: center;">Bạn cần đăng nhập trước khi tiếp tục.</h1><br>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        {% if not request.user.is_staff %}
+            <h1 style="text-align: center;">Chức năng này được dành cho tài khoản ban giám khảo.</h1><br>
+        {% endif %}
+        {% if request.user.is_staff %}
+            <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width="735" height="545" />
+
+            <form method="post">
+                {% csrf_token %}
+                <label for="ID1">ID của người chơi thứ nhất:</label>
+                <input type="text" id="ID1" name="ID1"><br><br>
+
+                <label for="text2">ID của người chơi thứ hai:</label>
+                <input type="text" id="ID2" name="ID2"><br><br>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

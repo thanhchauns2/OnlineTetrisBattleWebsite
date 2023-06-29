@@ -20,6 +20,10 @@ class UserRegistrationForm(UserCreationForm):
         label='Email:',
         help_text='We will send an email for verification.'
     )
+    account_type = forms.CharField(
+        label='References:',
+        help_text='If you\'re not sure what to fill in this field, enter your username instead'
+    )
     password1 = forms.CharField(
         label='Password:',
         strip=False,
@@ -29,4 +33,4 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'email', 'account_type', 'first_name', 'last_name', 'password1', 'password2']

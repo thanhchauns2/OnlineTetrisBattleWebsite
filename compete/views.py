@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from registration.models import UserProfile
 from .models import *
 from .forms import *
 
@@ -188,16 +190,49 @@ def watch(request):
             content = file.read()
             if content[0] == '0':
                 id = player1_id
+                lose = player2_id
                 winner = 1
                 name = name_1
             else:
                 id = player2_id
+                lose = player1_id
                 winner = 2
                 name = name_2
+            if mode == 'compete':
+                calculate_elo(id_win=id, id_lose=lose)
+                
     except FileNotFoundError:
         print(f"File '{result_link}' not found.")
     context = {'link': video_link, 'winner': winner, 'id': id, 'name': name}
     return render(request, 'compete/watch.html', context=context)
+
+def calculate_elo(id_win, id_lose):
+    user1 = User.objects.get(id=id_win)
+    user2 = User.objects.get(id=id_lose)
+    K1 = 10
+    K2 = 10
+    R1 = user1.userprofile.elo
+    R2 = user2.userprofile.elo
+    if R1 < 2400:
+        K1 = 15
+    elif R1 < 2000:
+        K1 = 20
+    elif R1 < 1600:
+        K1 = 25
+    if R2 < 2400:
+        K2 = 15
+    elif R2 < 2000:
+        K2 = 20
+    elif R2 < 1600:
+        K2 = 25
+    Q1 = 10 ** (R1 // 400)
+    Q2 = 10 ** (R2 // 400)
+    E1 = Q1 / (Q1 + Q2)
+    E2 = Q2 / (Q1 + Q2)
+    R1a = R1 + K1 * (1 - E1)
+    R2a = R2 + K2 * (0 - E2)
+    user1.userprofile.elo = R1a
+    user2.userprofile.elo = R2a
 
 @csrf_exempt
 def tournament(request):

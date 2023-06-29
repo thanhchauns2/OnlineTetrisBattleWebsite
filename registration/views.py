@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView
 from django.views.decorators.csrf import csrf_exempt
 from .forms import UserRegistrationForm
+from registration.models import UserProfile
 
 @csrf_exempt
 def register(request):
@@ -23,6 +24,8 @@ def register(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(request, username=username, password=password)
+            profile = UserProfile(user=user)
+            profile.save()
             login(request, user)
             # Redirect to home page
             return redirect('home')

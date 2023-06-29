@@ -129,3 +129,25 @@
   li.ft {
     list-style: none;
   }
+
+  .page-link {
+    background-color: #dddddd;
+    color: #000000;
+    padding: 5px 10px;
+    text-decoration: none;
+    margin-right: 5px;
+    border: 1px solid #999999;
+}
+
+.page-link:hover {
+    background-color: #aaaaaa;
+    color: #ffffff;
+}
+
+.current-page {
+    background-color: #999999;
+    color: #ffffff;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: 1px solid #666666;
+}

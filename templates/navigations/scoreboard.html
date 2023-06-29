@@ -4,25 +4,45 @@
 
     <h1 style="text-align: center;">Scoreboard</h1><br><br>
 
-    <table class="scoreboard-table">
+    <table style="border-collapse: collapse; width: 100%;">
         <thead>
             <tr>
-                <th>Thứ hạng</th>
-                <th>ID</th>
-                <th>Tên</th>
-                <th>Elo</th>
+                <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">Thứ hạng</th>
+                <th style="border: 1px solid black; padding: 8px;">ID</th>
+                <th style="border: 1px solid black; padding: 8px;">Tên</th>
+                <th style="border: 1px solid black; padding: 8px;">Elo</th>
             </tr>
         </thead>
         <tbody>
-            {% for profile in profiles %}
+            {% for user in page_obj %}
                 <tr>
-                    <td>{{ profile.rank }}</td>
-                    <td>{{ profile.id }}</td>
-                    <td>{{ profile.name }}</td>
-                    <td>{{ profile.elo }}</td>
+                    <td style="border: 1px solid black; padding: 8px;">{{ forloop.counter}}</td>
+                    <td style="border: 1px solid black; padding: 8px;">{{ user.id }}</td>
+                    <td style="border: 1px solid black; padding: 8px;">{{ user.username }}</td>
+                    <td style="border: 1px solid black; padding: 8px;">{{ user.userprofile.elo }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    
+    <br>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current-page">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+        {% endif %}
+    </div>
 
 {% endblock %}

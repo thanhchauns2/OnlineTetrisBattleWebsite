@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 @csrf_exempt
 def home(request):
@@ -30,6 +32,14 @@ def contact(request):
         return redirect('home')
     return render(request, 'navigations/contact.html')
 
-@csrf_exempt
+from django.core.paginator import Paginator
+
 def scoreboard(request):
-    return render(request, 'navigations/scoreboard.html')
+    users = User.objects.all().order_by('-userprofile__elo')
+
+    paginator = Paginator(users, 10)  # Chia danh sách users thành các trang, mỗi trang có tối đa 10 người dùng
+    page_number = request.GET.get('page')  # Lấy số trang hiện tại từ tham số truy vấn 'page'
+
+    page_obj = paginator.get_page(page_number)  # Lấy đối tượng trang hiện tại
+
+    return render(request, 'navigations/scoreboard.html', {'page_obj': page_obj})

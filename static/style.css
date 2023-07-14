@@ -124,6 +124,7 @@
   .column {
     display: inline-block;
     width: 50%;
+    font-size: 0.91em;
   }
 
   li.ft {

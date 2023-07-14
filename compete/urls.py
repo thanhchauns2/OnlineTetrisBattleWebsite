@@ -9,5 +9,6 @@ urlpatterns = [
     path('training/single/', views.single, name='single'),
     path('training/duel/', views.duel, name='duel'),
     path('watch/', views.watch, name='watch'),
+    # path('replay/', views.replay, name='replay'),
     # path('watch/<path:file_path>', views.watch_video, name='watch_video'),
 ]

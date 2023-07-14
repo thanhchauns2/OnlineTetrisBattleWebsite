@@ -2,6 +2,7 @@
 
 {% block content %}
     <h2>Register</h2>
+    <h3>Mỗi tài khoản được tạo và sử dụng chung bởi một nhóm 3 người, chia sẻ trách nhiệm và quyền lợi chung. Nghiêm cấm việc một người tham gia nhiều team khác nhau.</h3>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

@@ -9,9 +9,11 @@
         <video width="735" height="545" controls>
             <source src="/{{link}}"  type="video/webm">
         </video>
-        <h3>Winner: Player {{winner}}</h3>
-        <h3>ID: {{id}}</h3>
-        <h3>Name: {{name}}</h3>
+        <a href="#" id="openButton">Click to view results</a>
+        <div id="content" style="display: none;">
+            <h3>{{message}}</h3>
+            <h3>{{message2}}</h3>
+        </div>
         <!-- <img src = "/media/python.png"> -->
     {% endif %}
 

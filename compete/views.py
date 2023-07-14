@@ -124,11 +124,17 @@ def generate_game(link1, link2, link, player1_id, player2_id):
     with zipfile.ZipFile(zipfile1, 'r') as zip_ref:
         zip_ref.extractall(link)
         agentlink = os.path.join(link, 'agent')
-        os.rename(agentlink, os.path.join(link, 'agent1'))
+        try:
+            os.rename(agentlink, os.path.join(link, 'agent1').replace('\\', '/'))
+        except:
+            pass
     with zipfile.ZipFile(zipfile2, 'r') as zip_ref:
         zip_ref.extractall(link)
         agentlink = os.path.join(link, 'agent')
-        os.rename(agentlink, os.path.join(link, 'agent2'))
+        try:
+            os.rename(agentlink, os.path.join(link, 'agent2').replace('\\', '/'))
+        except:
+            pass
     
     file_path = os.path.join(link, 'judge.py')
     current_path = os.path.abspath('')
@@ -139,8 +145,8 @@ def generate_game(link1, link2, link, player1_id, player2_id):
         file.write('import sys\n')
         file.write('import agent1.Agent\n')
         file.write('import agent2.Agent\n')
-        file.write('agent1 = agent1.Agent.Agent()\n')
-        file.write('agent2 = agent2.Agent.Agent()\n')
+        file.write('agent1 = agent1.Agent.Agent(\'\')\n')
+        file.write('agent2 = agent2.Agent.Agent(\'\')\n')
         file.write('sys.path.append(\'' + current_path + '\')\n')
         file.write('from VideoRender import VideoRender\n')
         file.write('videorender =  VideoRender()\n')
@@ -157,7 +163,7 @@ def watch(request):
         if mode == 'single':
             player_id = request.GET.get('player')
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player_id, 'training', 'single', 'agent1', 'agent1.zip')
-            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all', '0', 'agent2.zip')
+            link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'all', '0', 'agent2', 'agent2.zip')
             player1_id = player_id
             player2_id = 0
             name_1 = 'Participant'
@@ -175,8 +181,8 @@ def watch(request):
             player2_id = request.GET.get('player2')
             link1 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player1_id, 'training', 'compete', 'agent1', 'agent1.zip')
             link2 = os.path.join(settings.MEDIA_ROOT, 'pool', 'byid', player2_id, 'training', 'compete', 'agent2', 'agent2.zip')
-            name_1 = 'Agent 1'
-            name_2 = 'Agent 2'
+            name_1 = User.objects.get(id=player1_id).username
+            name_2 = User.objects.get(id=player2_id).username
     now = datetime.datetime.now()
     link = now.strftime("%d-%m-%Y-%H-%M-%S") + "-" + str(player1_id) + '-' + str(player2_id) 
     link = os.path.join('media', 'bucket', link)
@@ -185,25 +191,29 @@ def watch(request):
         os.makedirs(link)
     video_link = generate_game(link1, link2, link, player1_id, player2_id)
     result_link = video_link[:-4] + 'txt'
+    winner, id, name = 0, 0, 0
+    message, message2 = "", ""
     try:
         with open(result_link, 'r') as file:
             content = file.read()
             if content[0] == '0':
                 id = player1_id
                 lose = player2_id
-                winner = 1
-                name = name_1
+                winner = name_1
+                loser = name_2
             else:
                 id = player2_id
                 lose = player1_id
-                winner = 2
-                name = name_2
+                winner = name_2
+                loser = name_1
+            message = winner + " win!"
             if mode == 'compete':
-                calculate_elo(id_win=id, id_lose=lose)
+                S1, S2, N1, N2 = calculate_elo(id_win=id, id_lose=lose)
+                message2 = "New elo: {} {} -> {}, {} {} -> {}".format(winner, S1, N1, loser, S2, N2)
                 
     except FileNotFoundError:
         print(f"File '{result_link}' not found.")
-    context = {'link': video_link, 'winner': winner, 'id': id, 'name': name}
+    context = {'link': video_link, 'message': message, 'message2' : message2}
     return render(request, 'compete/watch.html', context=context)
 
 def calculate_elo(id_win, id_lose):
@@ -229,16 +239,36 @@ def calculate_elo(id_win, id_lose):
     Q2 = 10 ** (R2 // 400)
     E1 = Q1 / (Q1 + Q2)
     E2 = Q2 / (Q1 + Q2)
-    R1a = R1 + K1 * (1 - E1)
-    R2a = R2 + K2 * (0 - E2)
+    R1a = int(R1 + K1 * (1 - E1))
+    R2a = int(R2 + K2 * (0 - E2))
     user1.userprofile.elo = R1a
+    user1.userprofile.save()
     user2.userprofile.elo = R2a
+    user2.userprofile.save()
+    return (R1, R2, R1a, R2a)
 
 @csrf_exempt
 def tournament(request):
     error_message = ''
     if request.method == 'POST':
-        ID1 = request.POST.get('ID1')
-        ID2 = request.POST.get('ID2')
-        return redirect('/compete/watch/?mode=compete&player1=' + str(ID1) + '&player2='+str(ID2))
-    return render(request, 'compete/tournament.html', {'error_message': error_message})
+        if not request.POST.get('tournament_id'):
+            tournament_id = request.POST.get('tournament_id')
+            print(tournament_id)
+            return redirect('/compete/tournament/?error_message={}&mode=compete&tournament_id={}'.format(
+                error_message, tournament_id
+            ))
+        if not request.POST.get('ID1'):
+            tournament_id = request.POST.get('tournament_id')
+            print(tournament_id, 'None')
+            return redirect('/compete/tournament/?error_message={}&mode=compete&tournament_id={}'.format(
+                error_message, tournament_id
+            ))
+        if request.POST.get('tournament_id') != 'None':
+            ID1 = request.POST.get('ID1')
+            ID2 = request.POST.get('ID2')
+            tournament_id = request.POST.get('tournament_id')
+            print(tournament_id)
+            return redirect('/compete/watch/?error_message={}&mode=compete&player1={}&player2={}&tournament_id={}'.format(
+                error_message, ID1, ID2, tournament_id
+            ))
+    return render(request, 'compete/tournament.html', {'error_message': error_message, 'tournament_id' : None})

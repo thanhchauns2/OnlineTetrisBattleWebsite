@@ -5,7 +5,9 @@
         <h1>Profile Page</h1>
         <hr>
         <h3>Personal Information</h3><br>
-        <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+        <p>Thành viên 1: {{ user.userprofile.member1_name }}. - MSV: {{ user.userprofile.member1_id }} - Lớp: {{ user.userprofile.member1_class }}</p>
+        <p>Thành viên 2: {{ user.userprofile.member2_name }}. - MSV: {{ user.userprofile.member2_id }} - Lớp: {{ user.userprofile.member2_class }}</p>
+        <p>Thành viên 3: {{ user.userprofile.member3_name }}. - MSV: {{ user.userprofile.member3_id }} - Lớp: {{ user.userprofile.member3_class }}</p>
         <p>Email: {{ user.email }}</p>
         <p>Username: {{ user.username }}</p>
         <p>ID: {{ user.id }}</p>

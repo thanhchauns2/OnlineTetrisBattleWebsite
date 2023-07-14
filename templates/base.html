@@ -7,9 +7,21 @@
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <!-- Add CSS and other meta tags here -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("openButton").addEventListener("click", function(event) {
+                event.preventDefault();
+                var contentDiv = document.getElementById("content");
+                if (contentDiv.style.display === "none") {
+                    contentDiv.style.display = "block";
+                } else {
+                    contentDiv.style.display = "none";
+                }
+            });
+        });
+        </script>
 </head>
 <body>
-    
     <header>
         <h1><a href="/" style="color: white;">OnlineTetrisBattle</a></h1>
         <nav>

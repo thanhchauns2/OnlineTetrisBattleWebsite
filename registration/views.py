@@ -13,11 +13,11 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            if form.cleaned_data.get('account_type') == settings.SECRET_KEY:
-                user.is_staff = True
-            elif form.cleaned_data.get('account_type') != user.username:
-                form = UserRegistrationForm()
-                return render(request, 'registration/register.html', {'form': form, 'message' : 'Invalid form'})
+            # if form.cleaned_data.get('account_type') == settings.SECRET_KEY:
+            #     user.is_staff = True
+            # elif form.cleaned_data.get('account_type') != user.username:
+            #     form = UserRegistrationForm()
+            #     return render(request, 'registration/register.html', {'form': form, 'message' : 'Invalid form'})
             user.id = random.randint(100000000000000, 999999999999999)
             user.save()
             # Log the user in
@@ -25,6 +25,17 @@ def register(request):
             password = form.cleaned_data.get('password1')
             user = authenticate(request, username=username, password=password)
             profile = UserProfile(user=user)
+
+            profile.member1_name = form.cleaned_data.get('member1_name')
+            profile.member1_id = form.cleaned_data.get('member1_id')
+            profile.member1_class = form.cleaned_data.get('member1_class')
+            profile.member2_name = form.cleaned_data.get('member2_name')
+            profile.member2_id = form.cleaned_data.get('member2_id')
+            profile.member2_class = form.cleaned_data.get('member2_class')
+            profile.member3_name = form.cleaned_data.get('member3_name')
+            profile.member3_id = form.cleaned_data.get('member3_id')
+            profile.member3_class = form.cleaned_data.get('member3_class')
+
             profile.save()
             login(request, user)
             # Redirect to home page

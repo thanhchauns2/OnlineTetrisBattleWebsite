@@ -11,27 +11,38 @@
         {% endif %}
         {% if not request.user.is_staff %}
             <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width = "735" height="545" />
-        
-            <h2>Your ID : {{ user.id }}</h2>
-        
-            <h2>Lưu ý:</h2>
-            <ul style = "list-style: none;">
-                <li>BTC sẽ sử dụng file này cho tới khi bạn upload một agent mới.</li>
-                <li>Lưu ý: tên file phải đặt là agent.zip</li>
-            </ul>
-            <br>
-        
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="file"></label>
-                    <input type="file" class="form-control-file" id="file" name="file">
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        
-            {% if error_message %}
-                <p style="color: red;">{{ error_message }}</p>
+            <h2>Your ID : {{ request.POST.get('tournament_id') }}</h2>
+            {% if request.POST.get('tournament_id') %}
+            
+                <h2>Your ID : {{ user.id }}</h2>
+            
+                <h2>Lưu ý:</h2>
+                <ul style = "list-style: none;">
+                    <li>BTC sẽ sử dụng file này cho tới khi bạn upload một agent mới.</li>
+                    <li>Lưu ý: tên file phải đặt là agent.zip</li>
+                </ul>
+                <br>
+            
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="file"></label>
+                        <input type="file" class="form-control-file" id="file" name="file">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            
+                {% if error_message %}
+                    <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
+             {% endif %}
+            {% if not request.POST.get('tournament_id') %}
+                <form method="post">
+                    {% csrf_token %}
+                        <label for="tournament_id">Tournament ID:</label>
+                        <input type="text" id="tournament_id" name="tournament_id"><br><br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             {% endif %}
         {% endif %}
     {% endif %}

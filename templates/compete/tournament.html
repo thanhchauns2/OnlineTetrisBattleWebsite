@@ -10,7 +10,7 @@
             <h1 style="text-align: center;">Chức năng này được dành cho tài khoản ban giám khảo.</h1><br>
         {% endif %}
         {% if request.user.is_staff %}
-            <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width="735" height="545" />
+            <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width="735" height="545" />
             {% if request.POST.get('tournament_id') %}
                 <form method="post">
                     {% csrf_token %}

@@ -140,6 +140,6 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://*']
 
 SECRET_KEY = 'PTIT@ADMIN@2023@942851'

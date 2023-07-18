@@ -3,21 +3,34 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.conf import settings
 
 @csrf_exempt
 def home(request):
-    return render(request, 'home.html')
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
+    return render(request, 'home.html', context=context)
 
 @csrf_exempt
 def about(request):
-    return render(request, 'navigations/about.html')
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
+    return render(request, 'navigations/about.html', context=context)
 
 @csrf_exempt
 def privacy(request):
-    return render(request, 'navigations/privacy.html')
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
+    return render(request, 'navigations/privacy.html', context=context)
 
 @csrf_exempt
 def contact(request):
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -30,9 +43,7 @@ def contact(request):
             fail_silently=False,
         )
         return redirect('home')
-    return render(request, 'navigations/contact.html')
-
-from django.core.paginator import Paginator
+    return render(request, 'navigations/contact.html', context=context)
 
 def scoreboard(request):
     users = User.objects.all().order_by('-userprofile__elo')
@@ -42,4 +53,7 @@ def scoreboard(request):
 
     page_obj = paginator.get_page(page_number)  # Lấy đối tượng trang hiện tại
 
-    return render(request, 'navigations/scoreboard.html', {'page_obj': page_obj})
+    context = {'page_obj': page_obj}
+    if settings.UPDATE == True:
+        context = {'page_obj': page_obj, 'updating' : 1}
+    return render(request, 'navigations/scoreboard.html', context=context)

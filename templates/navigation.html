@@ -1,19 +1,40 @@
 <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/scoreboard/">Scoreboard</a></li>
-    {% if request.user.is_staff %}
-        <li><a href="/compete/tournament">Tournament</a></li>
+    {% if not updating %}
+        <li><a href="/">Home</a></li>
+        <li><a href="/scoreboard/">Scoreboard</a></li>
+        {% if request.user.is_staff %}
+            <li><a href="/compete/tournament">Tournament</a></li>
+        {% endif %}
+        {% if not request.user.is_staff %}
+            <li><a href="/compete/">Compete</a></li>
+        {% endif %}
+        <li><a href="/about/">About</a></li>
+        {% if not request.user.is_authenticated %}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+            <li><a href="/accounts/profile">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+        {% endif %}
     {% endif %}
-    {% if not request.user.is_staff %}
-        <li><a href="/compete/">Compete</a></li>
-    {% endif %}
-    <li><a href="/about/">About</a></li>
-    {% if not request.user.is_authenticated %}
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-    {% endif %}
-    {% if request.user.is_authenticated %}
-        <li><a href="/accounts/profile">Profile</a></li>
-        <li><a href="/logout">Logout</a></li>
+    {% if updating %}
+        <li><a href="/">Home</a></li>
+        <li><a href="/">Scoreboard</a></li>
+        {% if request.user.is_staff %}
+            <li><a href="/">Tournament</a></li>
+        {% endif %}
+        {% if not request.user.is_staff %}
+            <li><a href="/">Compete</a></li>
+        {% endif %}
+        <li><a href="/">About</a></li>
+        {% if not request.user.is_authenticated %}
+            <li><a href="/">Login</a></li>
+            <li><a href="/">Register</a></li>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+            <li><a href="/">Profile</a></li>
+            <li><a href="/">Logout</a></li>
+        {% endif %}
     {% endif %}
 </ul>

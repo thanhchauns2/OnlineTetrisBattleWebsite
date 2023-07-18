@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-    <h1 style="text-align: center;">Chào mừng đến với Online Tetris Battle!</h1><br>
-    <!-- <a href="#" class="cta-button">Register</a> -->
-    <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width = "735" height="545" />
-
-
+    {% if not updating %}
+        <h1 style="text-align: center;">Chào mừng đến với Online Tetris Battle!</h1><br>
+        <!-- <a href="#" class="cta-button">Register</a> -->
+        <img src="https://github.com/thanhchauns2/GIFS/blob/main/img.jpg?raw=true" alt="Tetris Battle" width = "735" height="545" />
+    {% endif %}
+    {% if updating %}
+        <h1 style="text-align: center;">Web đang được bảo trì, vui lòng quay lại sau.</h1>
+    {% endif %}
 {% endblock %}

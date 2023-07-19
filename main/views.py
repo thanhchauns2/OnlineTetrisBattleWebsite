@@ -27,6 +27,10 @@ def privacy(request):
     return render(request, 'navigations/privacy.html', context=context)
 
 @csrf_exempt
+def contest_rules(request):
+    return render(request, 'navigations/contest_rules.html')
+
+@csrf_exempt
 def contact(request):
     context = {}
     if settings.UPDATE == True:

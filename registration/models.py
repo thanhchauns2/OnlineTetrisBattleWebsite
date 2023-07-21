@@ -13,3 +13,4 @@ class UserProfile(models.Model):
     member3_name = models.CharField(max_length=20, default='')
     member3_id = models.CharField(max_length=20, default='')
     member3_class = models.CharField(max_length=20, default='')
+    competition_id = models.IntegerField(default=0)

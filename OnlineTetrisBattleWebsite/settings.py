@@ -144,4 +144,4 @@ CSRF_TRUSTED_ORIGINS = ['https://*.railway.app', 'https://*.ptit.edu.vn']
 
 SECRET_KEY = 'PTIT@ADMIN@2023@942851'
 
-UPDATE = False
+UPDATE = True

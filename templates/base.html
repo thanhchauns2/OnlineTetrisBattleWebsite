@@ -35,9 +35,13 @@
             {% include 'navigation.html' %}
         </nav>
       </header>
-
         <main>
-            {% block content %}{% endblock %}
+            {% if updating %}
+                <h1 style="text-align: center;">Web đang được bảo trì, vui lòng quay lại sau.</h1>
+            {% endif %}
+            {% if not updating %}
+                {% block content %}{% endblock %}
+            {% endif %}
         </main>
     <footer>
         {% include 'footer.html' %}

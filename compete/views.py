@@ -10,16 +10,25 @@ from .forms import *
 
 @csrf_exempt
 def prepare(request):
-    return render(request, 'compete/prepare.html')
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
+    return render(request, 'compete/prepare.html', context=context)
 
 @csrf_exempt
 def training(request):
-    return render(request, 'compete/training.html')
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
+    return render(request, 'compete/training.html', context=context)
 
 @csrf_exempt
 def competition(request):
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
     form = TournamentForm()
-    error_message = 'Welcome to PTIT'
+    error_message = ''
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         user = request.user
@@ -58,11 +67,15 @@ def competition(request):
                 user.userprofile.competition_id = int(tournament_id)
                 user.userprofile.save()
                 error_message = 'Uploaded tournament id.'
-
-    return render(request, 'compete/competition.html', {'form': form, 'error_message': error_message})
+    context['form'] = form
+    context['error_message'] = error_message
+    return render(request, 'compete/competition.html', context=context)
 
 @csrf_exempt
 def single(request):
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
     form = FileUploadForm()
     error_message = ''
     if request.method == 'POST':
@@ -84,10 +97,15 @@ def single(request):
                         destination.write(chunk)
                 return redirect('/compete/watch/?mode=single&player=' + str(user.id))
 
-    return render(request, 'compete/training/single.html', {'form': form, 'error_message': error_message})
+    context['form'] = form
+    context['error_message'] = error_message
+    return render(request, 'compete/competition.html', context=context)
 
 @csrf_exempt
 def duel(request):
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
     form = FileUploadDuelForm()
     error_message = ''
     if request.method == 'POST':
@@ -123,7 +141,9 @@ def duel(request):
                         destination.write(chunk)
                 return redirect('/compete/watch/?mode=duel&player=' + str(user.id))
 
-    return render(request, 'compete/training/duel.html', {'form': form, 'error_message': error_message})
+    context['form'] = form
+    context['error_message'] = error_message
+    return render(request, 'compete/competition.html', context=context)
 
 def generate_game(link1, link2, link, player1_id, player2_id):
     # Copy 2 file zip vào link bucket

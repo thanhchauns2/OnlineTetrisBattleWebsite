@@ -9,6 +9,9 @@ from registration.models import UserProfile
 
 @csrf_exempt
 def register(request):
+    context = {}
+    if settings.UPDATE == True:
+        context = {'updating' : 1}
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -42,7 +45,8 @@ def register(request):
             return redirect('home')
     else:
         form = UserRegistrationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    context['form'] = form
+    return render(request, 'registration/register.html', context)
 
 @csrf_exempt
 def __login(request):

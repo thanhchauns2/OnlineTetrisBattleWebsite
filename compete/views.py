@@ -18,8 +18,8 @@ def training(request):
 
 @csrf_exempt
 def competition(request):
-    form = FileUploadForm()
-    error_message = ''
+    form = TournamentForm()
+    error_message = 'Welcome to PTIT'
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         user = request.user
@@ -48,6 +48,16 @@ def competition(request):
                         destination.write(chunk)
                 
                 error_message = 'Uploaded successfully.'
+        else:
+            form = TournamentForm(request.POST)
+            user = request.user
+            # print(1120)
+            if form.is_valid():
+                # print(11)
+                tournament_id = form.cleaned_data['tournament_id']
+                user.userprofile.competition_id = int(tournament_id)
+                user.userprofile.save()
+                error_message = 'Uploaded tournament id.'
 
     return render(request, 'compete/competition.html', {'form': form, 'error_message': error_message})
 

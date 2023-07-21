@@ -12,10 +12,7 @@
         {% if not request.user.is_staff %}
             <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width = "735" height="545" />
             <h2>Your ID : {{ user.id }}</h2>
-            {% if user.userprofile.tournament == 0 %}
-            
-                <h2>Your ID : {{ user.id }}</h2>
-            
+            {% if user.userprofile.competition_id != 0 %}
                 <h2>Lưu ý:</h2>
                 <ul style = "list-style: none;">
                     <li>BTC sẽ sử dụng file này cho tới khi bạn upload một agent mới.</li>
@@ -36,13 +33,14 @@
                     <p style="color: red;">{{ error_message }}</p>
                 {% endif %}
              {% endif %}
-            {% if user.userprofile.tournament > 0 %}
+            {% if user.userprofile.competition_id == 0 %}
                 <form method="post">
                     {% csrf_token %}
                         <label for="tournament_id">Tournament ID:</label>
                         <input type="text" id="tournament_id" name="tournament_id"><br><br>
                         <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                <p style="color: red;">{{ error_message }}</p>
             {% endif %}
         {% endif %}
     {% endif %}

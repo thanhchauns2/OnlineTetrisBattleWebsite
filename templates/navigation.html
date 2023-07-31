@@ -12,7 +12,6 @@
         <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
         {% if not request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/login">Login</a></li>
-            <li><a class="text-decoration-underline" href="/register">Register</a></li>
         {% endif %}
         {% if request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/accounts/profile">Profile</a></li>
@@ -32,7 +31,6 @@
         <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
         {% if not request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/">Login</a></li>
-            <li><a class="text-decoration-underline" href="/">Register</a></li>
         {% endif %}
         {% if request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/">Profile</a></li>

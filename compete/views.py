@@ -57,16 +57,16 @@ def competition(request):
                         destination.write(chunk)
                 
                 error_message = 'Uploaded successfully.'
-        else:
-            form = TournamentForm(request.POST)
-            user = request.user
-            # print(1120)
-            if form.is_valid():
-                # print(11)
-                tournament_id = form.cleaned_data['tournament_id']
-                user.userprofile.competition_id = int(tournament_id)
-                user.userprofile.save()
-                error_message = 'Uploaded tournament id.'
+        # else:
+        #     form = TournamentForm(request.POST)
+        #     user = request.user
+        #     # print(1120)
+        #     if form.is_valid():
+        #         # print(11)
+        #         tournament_id = form.cleaned_data['tournament_id']
+        #         user.userprofile.competition_id = int(tournament_id)
+        #         user.userprofile.save()
+        #         error_message = 'Uploaded tournament id.'
     context['form'] = form
     context['error_message'] = error_message
     return render(request, 'compete/competition.html', context=context)

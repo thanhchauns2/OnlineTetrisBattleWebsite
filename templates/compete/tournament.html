@@ -11,7 +11,6 @@
         {% endif %}
         {% if request.user.is_staff %}
             <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width="735" height="545" />
-            {% if request.POST.get('tournament_id') %}
                 <form method="post">
                     {% csrf_token %}
                     <label for="ID1">ID của người chơi thứ nhất:</label>
@@ -22,15 +21,6 @@
 
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-            {% endif %}
-            {% if not request.POST.get('tournament_id') %}
-                <form method="post">
-                    {% csrf_token %}
-                        <label for="tournament_id">Tournament ID:</label>
-                        <input type="text" id="tournament_id" name="tournament_id"><br><br>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            {% endif %}
         {% endif %}
     {% endif %}
 

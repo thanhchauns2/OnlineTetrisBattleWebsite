@@ -99,7 +99,7 @@ def single(request):
 
     context['form'] = form
     context['error_message'] = error_message
-    return render(request, 'compete/competition.html', context=context)
+    return render(request, 'compete/training/single.html', context=context)
 
 @csrf_exempt
 def duel(request):
@@ -143,7 +143,7 @@ def duel(request):
 
     context['form'] = form
     context['error_message'] = error_message
-    return render(request, 'compete/competition.html', context=context)
+    return render(request, 'compete/training/duel.html', context=context)
 
 def generate_game(link1, link2, link, player1_id, player2_id):
     # Copy 2 file zip vào link bucket

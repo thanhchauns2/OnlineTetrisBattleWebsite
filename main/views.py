@@ -64,3 +64,6 @@ def scoreboard(request):
     if settings.UPDATE == True:
         context = {'page_obj': page_obj, 'updating' : 1}
     return render(request, 'navigations/scoreboard.html', context=context)
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)

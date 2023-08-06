@@ -277,28 +277,47 @@ def calculate_elo(id_win, id_lose):
     user2.userprofile.save()
     return (R1, R2, R1a, R2a)
 
+# @csrf_exempt
+# def tournament(request):
+#     error_message = ''
+#     if request.method == 'POST':
+#         tournament_id = User.objects.get(username='admin').userprofile.competition_id
+#         print(tournament_id)
+#         if not request.POST.get('ID1'):
+#             tournament_id = request.POST.get('tournament_id')
+#             print(tournament_id, 'None')
+#             return redirect('/compete/tournament/?error_message={}&mode=compete&tournament_id={}'.format(
+#                 error_message, tournament_id
+#             ))
+#         if request.POST.get('tournament_id') != 'None':
+#             ID1 = request.POST.get('ID1')
+#             ID2 = request.POST.get('ID2')
+#             tournament_id = request.POST.get('tournament_id')
+#             print(tournament_id)
+#             return redirect('/compete/watch/?error_message={}&mode=compete&player1={}&player2={}&tournament_id={}'.format(
+#                 error_message, ID1, ID2, tournament_id
+#             ))
+#     return render(request, 'compete/tournament.html', {'error_message': error_message, 'tournament_id' : None})
+
 @csrf_exempt
 def tournament(request):
     error_message = ''
     if request.method == 'POST':
-        if not request.POST.get('tournament_id'):
-            tournament_id = request.POST.get('tournament_id')
-            print(tournament_id)
-            return redirect('/compete/tournament/?error_message={}&mode=compete&tournament_id={}'.format(
-                error_message, tournament_id
-            ))
+        tournament_id = User.objects.get(username='admin').userprofile.competition_id
+        print(tournament_id)
         if not request.POST.get('ID1'):
-            tournament_id = request.POST.get('tournament_id')
-            print(tournament_id, 'None')
             return redirect('/compete/tournament/?error_message={}&mode=compete&tournament_id={}'.format(
                 error_message, tournament_id
             ))
         if request.POST.get('tournament_id') != 'None':
             ID1 = request.POST.get('ID1')
             ID2 = request.POST.get('ID2')
-            tournament_id = request.POST.get('tournament_id')
-            print(tournament_id)
             return redirect('/compete/watch/?error_message={}&mode=compete&player1={}&player2={}&tournament_id={}'.format(
                 error_message, ID1, ID2, tournament_id
             ))
-    return render(request, 'compete/tournament.html', {'error_message': error_message, 'tournament_id' : None})
+
+    # Lấy danh sách tài khoản có competition_id trùng với tài khoản admin
+    admin_competition_id = User.objects.get(username='admin').userprofile.competition_id
+    users = User.objects.filter(userprofile__competition_id=admin_competition_id)
+
+    return render(request, 'compete/tournament.html', {'error_message': error_message, 'users': users, 'tournament_id' : None})

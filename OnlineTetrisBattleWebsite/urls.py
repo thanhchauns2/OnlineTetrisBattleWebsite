@@ -18,6 +18,9 @@ from django.conf import settings  # new
 from django.urls import path, include  # new
 from django.conf.urls.static import static  # new
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from . import views
+
+handler404 = views.page_not_found_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),

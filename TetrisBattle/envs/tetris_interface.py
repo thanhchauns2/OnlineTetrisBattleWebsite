@@ -175,21 +175,25 @@ class TetrisInterface(abc.ABC):
         ob = np.transpose(ob, (1, 0, 2))
         return ob
 
-    def get_seen_grid(self):
-        grid_1 = self.tetris_list[self.now_player]["tetris"].get_grid()
+    def get_seen_grid(self, mode="single"):
+        now_player = self.now_player
+        opp_player = 1 - self.now_player
+        if mode == "double":
+            now_player = 1 - self.now_player
+            opp_player = self.now_player
+        grid_1 = self.tetris_list[now_player]["tetris"].get_grid()
         grid_1[-1][-1] = self.time / MAX_TIME
         # print(grid_1)
-        grid_2 = self.tetris_list[1 - self.now_player]["tetris"].get_grid()
+        grid_2 = self.tetris_list[opp_player]["tetris"].get_grid()
         grid_2[-1][-1] = self.time / MAX_TIME
-        # grid_2.fill(0) # since only one player
         grid = np.concatenate([grid_1, grid_2], axis=1)
 
         return grid.reshape(grid.shape[0], grid.shape[1], 1)
         # return self.tetris_list[self.now_player]["tetris"].get_grid().reshape(GRID_DEPTH, GRID_WIDTH, 1)
 
-    def get_obs(self):
+    def get_obs(self, mode="single"):
         if self._obs_type == "grid":
-            return self.get_seen_grid()
+            return self.get_seen_grid(mode=mode)
         elif self._obs_type == "image":
             img = self.get_screen_shot()
         return img
@@ -240,7 +244,7 @@ class TetrisInterface(abc.ABC):
 
         return action
 
-    def reset(self):
+    def reset(self, avatar1_path=None, avatar2_path=None, name1=None, name2=None, fontsize=40):
         # Reset the state of the environment to an initial state
 
         self.time = MAX_TIME
@@ -268,6 +272,7 @@ class TetrisInterface(abc.ABC):
 
             self.renderer.drawGameScreen(tetris)
 
+        self.renderer.drawAvatar(img_path1=avatar1_path, img_path2=avatar2_path, name1=name1, name2=name2, fontsize=fontsize)
         self.renderer.drawTime2p(self.time)
        
         #time goes until it hits zero
@@ -312,12 +317,6 @@ class TetrisSingleInterface(TetrisInterface):
                 'curr_repeat_time': 0,
                 'last_action': 0
             })
-
-            self.last_infos = {'height_sum': 0, 
-                           'diff_sum': 0,
-                           'max_height': 0,
-                           'holes': 0,
-                           'n_used_block': 0}
             
         self.reset()
     
@@ -442,7 +441,7 @@ class TetrisSingleInterface(TetrisInterface):
 
         self.time = self.update_time(self.time)
 
-        if self.time == 0:
+        if self.time <= 0:
             reward_notdie = 0.3 * self.total_reward
             end = 1
 
@@ -454,12 +453,11 @@ class TetrisSingleInterface(TetrisInterface):
         self.myClock.tick(FPS)  
         pygame.display.flip()
 
-        ob = self.get_obs()
+        ob = self.get_obs(mode="single")
 
         infos = {'is_fallen': tetris.is_fallen}
 
         if tetris.is_fallen:
-        # if True:
             height_sum, diff_sum, max_height, holes = get_infos(tetris.get_board())
 
             # store the different of each information due to the move
@@ -576,7 +574,7 @@ class TetrisDoubleInterface(TetrisInterface):
                 
                 opponent["tetris"].update_ko()
 
-                tetris.clear_garbage()
+                # tetris.clear_garbage()
 
                 self.renderer.drawByName("ko", *pos["ko"])
                 self.renderer.drawByName("transparent", *pos["transparent"])
@@ -622,7 +620,7 @@ class TetrisDoubleInterface(TetrisInterface):
 
         self.time = self.update_time(self.time)
 
-        if self.time == 0:
+        if self.time <= 0:
             winner = Judge.who_win(tetris, opponent["tetris"])
             end = 1
 
@@ -631,7 +629,7 @@ class TetrisDoubleInterface(TetrisInterface):
         self.myClock.tick(FPS)  
         pygame.display.flip()
 
-        ob = self.get_obs()
+        ob = self.get_obs(mode="double")
 
         infos = {'now_player': self.now_player}
 

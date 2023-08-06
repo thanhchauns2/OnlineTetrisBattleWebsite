@@ -15,7 +15,7 @@ class TetrisEnv(gym.Env, abc.ABC):
     metadata = {'render.modes': ['human', 'rgb_array'], 
                 'obs_type': ['image', 'grid']}
 
-    def __init__(self, interface, gridchoice="none", obs_type="image", mode="rgb_array"):
+    def __init__(self, interface, gridchoice="none", obs_type="grid", mode="rgb_array"):
         super(TetrisEnv, self).__init__()
 
         # Define action and observation space
@@ -60,14 +60,14 @@ class TetrisEnv(gym.Env, abc.ABC):
     def take_turns(self):
         return self.game_interface.take_turns()
         
-    def reset(self):
+    def reset(self, avatar1_path=None, avatar2_path=None, name1=None, name2=None, fontsize=40):
 
         self.accum_rewards = 0
         self.infos = {}
         # Reset the state of the environment to an initial state
 
-        ob = self.game_interface.reset()
-
+        ob = self.game_interface.reset(avatar1_path=avatar1_path, avatar2_path=avatar2_path, name1=name1, name2=name2, fontsize=fontsize)
+        ob, _, _, _, = self.game_interface.act(0)
         return ob
     
     def render(self, mode='human', close=False):
@@ -90,14 +90,15 @@ class TetrisSingleEnv(TetrisEnv):
     metadata = {'render.modes': ['human', 'rgb_array'], 
                 'obs_type': ['image', 'grid']}
 
-    def __init__(self, gridchoice="none", obs_type="image", mode="rgb_array"):
+    def __init__(self, gridchoice="none", obs_type="grid", mode="rgb_array"):
         super(TetrisSingleEnv, self).__init__(TetrisSingleInterface, gridchoice, obs_type, mode)
 
     def step(self, action):
         # Execute one time step within the environment
 
         ob, reward, end, infos = self.game_interface.act(action)
-
+        ob, reward_noop, end, infos = self.game_interface.act(0)
+        reward += reward_noop
         # if 'height_sum' in infos:
         #     # print(infos)
         #     reward -= infos['height_sum'] * 0.2
@@ -123,13 +124,15 @@ class TetrisDoubleEnv(TetrisEnv):
     metadata = {'render.modes': ['human', 'rgb_array'], 
                 'obs_type': ['image', 'grid']}
 
-    def __init__(self, gridchoice="none", obs_type="image", mode="rgb_array"):
+    def __init__(self, gridchoice="none", obs_type="grid", mode="rgb_array"):
         super(TetrisDoubleEnv, self).__init__(TetrisDoubleInterface, gridchoice, obs_type, mode)
   
     def step(self, action):
         # Execute one time step within the environment
 
         ob, reward, end, infos = self.game_interface.act(action)
+        ob, reward_noop, end, infos = self.game_interface.act(0)
+        reward += reward_noop
 
         # if len(infos) != 0:
         #     reward += infos['height_sum'] / 50 / 1000

@@ -553,7 +553,7 @@ class Tetris(object):
         self._KO = 0 
 
         self._attacked = 0
-        self._is_fallen = 1
+        self._is_fallen = 0
 
         self.px = 4
         self.py = -2
@@ -623,18 +623,9 @@ class Tetris(object):
         block, px, py = self.block, self.px, self.py
         excess = len(self.grid[0]) - GRID_DEPTH
         b = block.now_block()
-
+        
         for i in range(len(self.grid)):
-            # return_grids[i] = np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32)
-            # return_grids[i] = np.pad(np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32), [(0, 1)], mode='constant')
-            grid_i = np.array(self.grid[i][excess:GRID_DEPTH], dtype=np.float32)
-            if grid_i.shape[0] < 20:
-                grid_i = np.concatenate([grid_i, np.zeros((20 - grid_i.shape[0],), dtype=np.float32)])
-            elif grid_i.shape[0] > 20:
-                # grid_i = grid_i[:20]
-                grid_i = grid_i[-20:]
-                # grid_i[grid_i < 1] = 1
-            return_grids[i] = grid_i
+            return_grids[i] = np.array(self.grid[i][excess:GRID_DEPTH] + [1 for i in range(excess)], dtype=np.float32)
         return_grids[return_grids > 0] = 1
 
         add_y = hardDrop(self.grid, self.block, self.px, self.py)
@@ -650,17 +641,15 @@ class Tetris(object):
                         return_grids[px + x][py + y - excess] = 0.7
 
         informations = np.zeros(shape=(len(PIECE_NUM2TYPE) - 1, GRID_DEPTH), dtype=np.float32)
-        informations.fill(-20)
         if self.held != None:
             informations[PIECE_TYPE2NUM[self.held.block_type()] - 1][0] = 1
-        
-        informations[PIECE_TYPE2NUM[self.block.block_type()] - 1][1] = 1
 
         nextpieces = self.buffer.now_list
         for i in range(5): # 5 different pieces 
             _type = nextpieces[i].block_type()
-            informations[PIECE_TYPE2NUM[_type] - 1][i + 2] = 1
-        # index start from 7
+            informations[PIECE_TYPE2NUM[_type] - 1][i + 1] = 1
+        informations[PIECE_TYPE2NUM[self.block.block_type()] - 1][6] = 1
+        # index start from 6
 
         informations[0][7] = self.sent / 100
         informations[1][7] = self.combo / 10
@@ -669,7 +658,6 @@ class Tetris(object):
         # informations[3][8] = self.time / MAX_TIME
 
         return_grids = np.concatenate((return_grids, informations), axis=0)
-        # return return_grids
 
         return np.transpose(return_grids, (1, 0))
 
@@ -803,12 +791,12 @@ class Tetris(object):
     def check_fallen(self):
         if collideDown(self.grid, self.block, self.px, self.py) == True:
             # self.stopcounter += 1
-            if self.LAST_FALL_DOWN_TIME >= FALL_DOWN_FREQ:
-                self._is_fallen = 1
-                put_block_in_grid(self.grid, self.block, self.px, self.py)
-                # print("fallen")
+            # if self.LAST_FALL_DOWN_TIME >= FALL_DOWN_FREQ:
+            self._is_fallen = 1
+            put_block_in_grid(self.grid, self.block, self.px, self.py)
+            # print("fallen")
 
-                return True
+            return True
 
         else:
             self._is_fallen = 0

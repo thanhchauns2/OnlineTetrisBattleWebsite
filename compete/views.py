@@ -10,6 +10,7 @@ from registration.models import UserProfile
 from .models import *
 from .forms import *
 import threading, queue
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 @csrf_exempt
 def prepare(request):
@@ -223,23 +224,31 @@ def watch(request):
     if not os.path.exists(link):
         os.makedirs(link)
     # video_link = generate_game(link1, link2, link, player1_id, player2_id)
-    result_queue = queue.Queue()
+    # result_queue = queue.Queue()
     my_thread = threading.Thread(target=generate_game, args=(link1, link2, link, player1_id, player2_id))
     my_thread.start()
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(11)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(12)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(13)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(14)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(15)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     time.sleep(30)
-    requests.get('https://aicontest.ptit.edu.vn')
+    print(16)
+    requests.get('https://aicontest.ptit.edu.vn', verify=False)
     my_thread.join()
-    video_link = result_queue.get()
+    # video_link = result_queue.get()
+    video_link = os.path.join(link, 'outpy.webm')
     result_link = video_link[:-4] + 'txt'
     winner, id, name = 0, 0, 0
     message, message2 = "", ""

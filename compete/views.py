@@ -1,12 +1,15 @@
 import datetime, os, shutil, zipfile
+import time
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+import requests
 from registration.models import UserProfile
 from .models import *
 from .forms import *
+import threading, queue
 
 @csrf_exempt
 def prepare(request):
@@ -219,7 +222,24 @@ def watch(request):
     link = link.replace('\\', '/')
     if not os.path.exists(link):
         os.makedirs(link)
-    video_link = generate_game(link1, link2, link, player1_id, player2_id)
+    # video_link = generate_game(link1, link2, link, player1_id, player2_id)
+    result_queue = queue.Queue()
+    my_thread = threading.Thread(target=generate_game, args=(link1, link2, link, player1_id, player2_id))
+    my_thread.start()
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    time.sleep(30)
+    requests.get('https://aicontest.ptit.edu.vn')
+    my_thread.join()
+    video_link = result_queue.get()
     result_link = video_link[:-4] + 'txt'
     winner, id, name = 0, 0, 0
     message, message2 = "", ""

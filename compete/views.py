@@ -177,9 +177,13 @@ def generate_game(link1, link2, link, player1_id, player2_id):
     with open(file_path, 'w') as file:
         file.write('print(\'Hello!\')\n')
         file.write('import sys\n')
+        # file.write('import agent1\n')
+        # file.write('import agent2\n')
         file.write('import agent1.Agent\n')
         file.write('import agent2.Agent\n')
+        file.write('print(\'Agent 1:\')\n')
         file.write('agent1 = agent1.Agent.Agent(\'\')\n')
+        file.write('print(\'Agent 2:\')\n')
         file.write('agent2 = agent2.Agent.Agent(\'\')\n')
         file.write('sys.path.append(\'' + current_path + '\')\n')
         file.write('from VideoRender import VideoRender\n')

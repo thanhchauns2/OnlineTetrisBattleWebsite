@@ -28,4 +28,5 @@ urlpatterns = [
     path('', include("registration.urls")),
     path('compete/', include("compete.urls")),
     path('accounts/', include("accounts.urls")),
+    path('tournament/', include("tournament.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + staticfiles_urlpatterns()

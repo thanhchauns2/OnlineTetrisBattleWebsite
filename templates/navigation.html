@@ -1,15 +1,14 @@
 <ul>
     {% if not updating %}
-        <li><a class="text-decoration-underline" href="/">Home</a></li>
         <li><a class="text-decoration-underline" href="/scoreboard/">Scoreboard</a></li>
         {% if request.user.is_staff %}
             <li><a class="text-decoration-underline" href="/compete/tournament">Tournament</a></li>
+            <li><a class="text-decoration-underline" href="/tournament/brackets">Brackets Tournament</a></li>
+            <li><a class="text-decoration-underline" href="/tournament/elimination">Single-Elimination</a></li>
         {% endif %}
         {% if not request.user.is_staff %}
             <li><a class="text-decoration-underline" href="/compete/">Compete</a></li>
         {% endif %}
-        <li><a class="text-decoration-underline" href="/about/">About</a></li>
-        <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
         {% if not request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/login">Login</a></li>
         {% endif %}
@@ -23,6 +22,8 @@
         <li><a class="text-decoration-underline" href="/">Scoreboard</a></li>
         {% if request.user.is_staff %}
             <li><a class="text-decoration-underline" href="/">Tournament</a></li>
+            <li><a class="text-decoration-underline" href="/">Brackets Tournament</a></li>
+            <li><a class="text-decoration-underline" href="/">Single-Elimination</a></li>
         {% endif %}
         {% if not request.user.is_staff %}
             <li><a class="text-decoration-underline" href="/">Compete</a></li>

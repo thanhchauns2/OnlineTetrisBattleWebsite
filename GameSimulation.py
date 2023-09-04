@@ -1,6 +1,6 @@
 from TetrisBattle.envs.tetris_env import TetrisDoubleEnv
-# from CustomAgent import Agent
-from Agent import Agent
+from CustomAgent2 import Agent
+# from Agent import Test
 import cv2, time, random
 import numpy as np
 import pandas as pd
@@ -16,23 +16,13 @@ class Agent2:
 
 env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
 
+genes = [[83.9582, 85.5775, 1.0495, 1.0602, 5.7449, 13.3834, 13.8588, 6.7820, 2.1385, -6.0317]]
+
 done = False
 state = env.reset()
 agent_list = [
-            # Agent(
-            #     height= -0.510066,
-            #     lines = 0.760666,
-            #     holes = -0.35663,
-            #     bumpiness = -0.184483
-            # ), 
-            # Agent(
-            #     height= -0.510066,
-            #     lines = 0.760666,
-            #     holes = -0.35663,
-            #     bumpiness = -0.184483
-            # )
-            Agent(),
-            Agent()
+            Agent(0),
+            Agent(1)
             ,]
 
 imgs = []
@@ -48,18 +38,6 @@ while not done:
     cv2.imshow('image', img)
     cv2.imwrite('img.jpg',img)
     cv2.waitKey(2)
-
-# print(state.shape)
-state = list(state)
-state2 = []
-for i in state:
-    state2.append([])
-    for j in i:
-        state2[-1].append(j[0])
-# print(state2)
-
-# print(np.squeeze(state, 2).shape)
-pd.DataFrame(state2).to_csv("data.csv")
 
 out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*'DIVX'), 25, (800,600))
 for img in imgs:

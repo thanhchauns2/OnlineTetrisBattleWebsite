@@ -1,8 +1,4 @@
 from django.shortcuts import render
-<<<<<<< Updated upstream
-
-# Create your views here.
-=======
 from django.http import HttpResponse
 
 def brackets(request):
@@ -20,4 +16,3 @@ def brackets_participants(request):
 
 def brackets_eliminating(request):
     return render(request, 'tournament/brackets_eliminating.html')
->>>>>>> Stashed changes

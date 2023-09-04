@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if not request.user.is_authenticated %}
+        <h1 style="text-align: center;">Bạn cần đăng nhập trước khi tiếp tục.</h1><br>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        {% if not request.user.is_staff %}
+            <h1 style="text-align: center;">Chức năng này được dành cho tài khoản ban giám khảo.</h1><br>
+        {% endif %}
+        {% if request.user.is_staff %}
+            <style>
+                .button-container {
+                    text-align: center;
+                }
+            
+                .button-container button {
+                    margin: 0 10px;
+                    padding: 10px 20px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 16px;
+                    color: white;
+                    border-radius: 5px;
+                }
+            
+                .button-container button.yes {
+                    background-color: green;
+                }
+            
+                .button-container button.no {
+                    background-color: red;
+                }
+            </style>
+            <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width="735" height="545" />
+            <h1 style="text-align: center;">Chọn lại danh sách thí sinh?.</h1><br>
+            <form method="post">
+                {% csrf_token %}
+                <div class="button-container">
+                    <button type="submit" name="choice" value="yes" class="yes">Có</button>
+                    <button type="submit" name="choice" value="no" class="no">Không</button>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

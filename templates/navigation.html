@@ -3,7 +3,6 @@
         <li><a class="text-decoration-underline" href="/scoreboard/">Scoreboard</a></li>
         {% if request.user.is_staff %}
             <li><a class="text-decoration-underline" href="/compete/tournament">Tournament</a></li>
-            <li><a class="text-decoration-underline" href="/tournament/brackets">Brackets Tournament</a></li>
             <li><a class="text-decoration-underline" href="/tournament/elimination">Single-Elimination</a></li>
         {% endif %}
         {% if not request.user.is_staff %}

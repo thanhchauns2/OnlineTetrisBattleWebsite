@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     {% if not request.user.is_authenticated %}
         <h1 style="text-align: center;">Bạn cần đăng nhập trước khi tiếp tục.</h1><br>
     {% endif %}
@@ -12,7 +11,11 @@
         {% if request.user.is_staff %}
             <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width="735" height="545" />
             <h1 style="text-align: center;">Chọn danh sách thí sinh</h1><br>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit">
+            </form>
         {% endif %}
     {% endif %}
-
 {% endblock %}

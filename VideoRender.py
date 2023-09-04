@@ -9,12 +9,12 @@ class VideoRender():
     def __init__(self) -> None:
         pass
 
-    def render(self, agent1, agent2, link = 'outpy.webm', fps = 24):
+    def render(self, agent1, agent2, agent1_name=None, agent2_name=None, link = 'outpy.webm', fps = 100):
 
         agent_list = [agent1, agent2]
         env = TetrisDoubleEnv(gridchoice="none", obs_type="grid", mode="rgb_array")
         done = False
-        state = env.reset()
+        state = env.reset(name1=agent1_name, name2=agent2_name)
 
         imgs = []
 

@@ -184,7 +184,10 @@ def generate_game(link1, link2, link, player1_id, player2_id):
         file.write('sys.path.append(\'' + current_path + '\')\n')
         file.write('from VideoRender import VideoRender\n')
         file.write('videorender =  VideoRender()\n')
-        file.write('videorender.render(agent1=agent1, agent2=agent2, link=\'' + video_path.replace('\\', '\\\\') + '\', fps=24)\n')
+        if player2_id != 0:
+            file.write(f"videorender.render(agent1=agent1, agent2=agent2, agent1_name='{User.objects.get(id=player1_id).username}', agent2_name='{User.objects.get(id=player2_id).username}', link=\'" + video_path.replace('\\', '\\\\') + '\', fps=24)\n')
+        else:
+            file.write(f"videorender.render(agent1=agent1, agent2=agent2, link=\'" + video_path.replace('\\', '\\\\') + '\', fps=24)\n')
 
     os.system('python3 ' + file_path)
 
@@ -223,39 +226,39 @@ def watch(request):
     link = link.replace('\\', '/')
     if not os.path.exists(link):
         os.makedirs(link)
-    # video_link = generate_game(link1, link2, link, player1_id, player2_id)
-    # result_queue = queue.Queue()
-    my_thread = threading.Thread(target=generate_game, args=(link1, link2, link, player1_id, player2_id))
-    my_thread.start()
-    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    time.sleep(30)
-    context = {}
-    # print(11)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    time.sleep(30)
-    print(12)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    time.sleep(30)
-    print(13)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    time.sleep(30)
-    print(14)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    time.sleep(30)
-    print(15)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    time.sleep(30)
-    print(16)
-    # requests.get('https://aicontest.ptit.edu.vn', verify=False)
-    render(request, 'compete/prepare.html', context=context)
-    my_thread.join()
-    # video_link = result_queue.get()
-    video_link = os.path.join(link, 'outpy.webm')
+    video_link = generate_game(link1, link2, link, player1_id, player2_id)
+    # # result_queue = queue.Queue()
+    # my_thread = threading.Thread(target=generate_game, args=(link1, link2, link, player1_id, player2_id))
+    # my_thread.start()
+    # requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    # time.sleep(30)
+    # context = {}
+    # # print(11)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # time.sleep(30)
+    # print(12)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # time.sleep(30)
+    # print(13)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # time.sleep(30)
+    # print(14)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # time.sleep(30)
+    # print(15)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # time.sleep(30)
+    # print(16)
+    # # requests.get('https://aicontest.ptit.edu.vn', verify=False)
+    # render(request, 'compete/prepare.html', context=context)
+    # my_thread.join()
+    # # video_link = result_queue.get()
+    # video_link = os.path.join(link, 'outpy.webm')
     result_link = video_link[:-4] + 'txt'
     winner, id, name = 0, 0, 0
     message, message2 = "", ""
@@ -354,6 +357,6 @@ def tournament(request):
 
     # Lấy danh sách tài khoản có competition_id trùng với tài khoản admin
     admin_competition_id = User.objects.get(username='admin').userprofile.competition_id
-    users = User.objects.filter(userprofile__competition_id=admin_competition_id)
-
+    users = User.objects.filter(userprofile__competition_id=admin_competition_id).order_by('username')
+    
     return render(request, 'compete/tournament.html', {'error_message': error_message, 'users': users, 'tournament_id' : None})

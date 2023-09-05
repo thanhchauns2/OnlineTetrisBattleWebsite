@@ -11,6 +11,195 @@
         {% if request.user.is_staff %}
             <img src="https://github.com/thanhchauns2/GIFS/blob/main/ezgif-2-299d597cf7.gif?raw=true" alt="Tetris Battle" width="735" height="545" />
             <h1 style="text-align: center;">Danh sách thi đấu</h1><br>
+
+            <style>
+                #interactiveContainer {
+                    display: flex;
+                    flex-direction: row; /* Sắp xếp thành một hàng ngang */
+                    justify-content: flex-start; /* Hiển thị từ trái sang phải */
+                    border: 2px solid red;
+                    padding: 10px;
+                }
+        
+                #oneper16 {
+                    border: 2px solid white;
+                    padding: 10px;
+                }
+        
+                #quarterFinal {
+                    border: 2px solid white;
+                    padding: 10px;
+                }
+        
+                #semiFinal {
+                    border: 2px solid white;
+                    padding: 10px;
+                }
+        
+                #Final {
+                    border: 2px solid white;
+                    padding: 10px;
+                }
+            </style>
+            <div id="interactiveContainer">
+                <div id="oneper16">
+                    <h3 style="text-align: center;"> Vòng 1/16 </h3><br>
+                    <!-- Danh sách selected user sẽ được thêm vào đây -->
+                </div>
+            
+                <div id="quarterFinal">
+                    <h3 style="text-align: center;"> Vòng tứ kết </h3><br>
+                    <div id="quarterFinalList">
+                        <!-- Danh sách selected user trong quarterFinal sẽ được thêm vào đây -->
+                    </div>
+                </div>
+            
+                <div id="semiFinal">
+                    <h3 style="text-align: center;"> Vòng bán kết </h3><br>
+                    <div id="semiFinalList">
+                        <!-- Danh sách selected user trong semiFinal sẽ được thêm vào đây -->
+                    </div>
+                </div>
+            
+                <div id="Final">
+                    <h3 style="text-align: center;"> Vòng chung kết </h3><br>
+                    <div id="finalList">
+                        <!-- Danh sách selected user trong Final sẽ được thêm vào đây -->
+                    </div>
+                </div>
+            
+                <script>
+                    // Mô phỏng danh sách selected user
+                    var __oneper16 = [
+                        {% for selected_user in elimination %}
+                            { id: {{ selected_user.user.id }}, username: '{{ selected_user.user.username }}' },
+                        {% endfor %}
+                    ];
+            
+                    var __quarterFinal = [];
+            
+                    var __semiFinal = [];
+            
+                    var __final = [];
+            
+                    // Lặp qua danh sách elimination và tạo các ô cho từng selected user
+                    var oneper16 = document.getElementById('oneper16');
+                    var quarterFinal = document.getElementById('quarterFinal');
+                    var quarterFinalList = document.getElementById('quarterFinalList');
+                    var semiFinal = document.getElementById('semiFinal');
+                    var semiFinalList = document.getElementById('semiFinalList');
+                    var Final = document.getElementById('Final');
+                    var finalList = document.getElementById('finalList');
+            
+                    function updateQuarterFinalUI(copyUser) {
+                        var isAlreadyAdded = false;
+                        for (var i = 0; i < __quarterFinal.length; i++) {
+                            console.log(JSON.stringify(__quarterFinal[i]));
+                            if (__quarterFinal[i].id == copyUser.id){
+                                isAlreadyAdded = true;
+                            }
+                        }
+                        if (!isAlreadyAdded) {
+                            __quarterFinal.push(copyUser);
+                            quarterFinalList.innerHTML = '';
+                            __quarterFinal.forEach(function(user) {
+                                var isAlreadyAdded = false;
+                                    var userBox = document.createElement('div');
+                                    userBox.textContent = user.username;
+                                    userBox.className = 'user-box';
+                                    userBox.draggable = true;
+                                    userBox.style.textAlign = 'center'; // Căn lề ngang giữa
+                                    userBox.style.verticalAlign = 'middle'; // Căn lề dọc giữa
+
+                                    // Sử dụng sự kiện click để di chuyển bản copy của selected user giữa các vùng
+                                    userBox.addEventListener('click', function() {
+                                        updateSemiFinalUI(user); // Cập nhật giao diện semiFinal sau khi chuyển
+                                    });
+
+                                    quarterFinalList.appendChild(userBox);
+                            });
+                        }
+                    }
+
+            
+                    function updateSemiFinalUI(copyUser) {
+                        var isAlreadyAdded = false;
+                        for (var i = 0; i < __semiFinal.length; i++) {
+                            console.log(JSON.stringify(__semiFinal[i]));
+                            if (__semiFinal[i].id == copyUser.id){
+                                isAlreadyAdded = true;
+                            }
+                        }
+                        if (!isAlreadyAdded) {
+                            __semiFinal.push(copyUser);
+                            semiFinalList.innerHTML = '';
+                            __semiFinal.forEach(function(user) {
+                                var userBox = document.createElement('div');
+                                userBox.textContent = user.username;
+                                userBox.className = 'user-box';
+                                userBox.draggable = true;
+                                userBox.style.textAlign = 'center'; // Căn lề ngang giữa
+                                userBox.style.verticalAlign = 'middle'; // Căn lề dọc giữa
+
+                                // Sử dụng sự kiện click để di chuyển bản copy của selected user giữa các vùng
+                                userBox.addEventListener('click', function() {
+                                    updateFinalUI(user); // Cập nhật giao diện semiFinal sau khi chuyển
+                                });
+                
+                                semiFinalList.appendChild(userBox);
+                            });
+                        }
+                    }
+
+                    function updateFinalUI(copyUser) {
+                        var isAlreadyAdded = false;
+                        for (var i = 0; i < __final.length; i++) {
+                            console.log(JSON.stringify(__final[i]));
+                            if (__final[i].id == copyUser.id){
+                                isAlreadyAdded = true;
+                            }
+                        }
+                        if (!isAlreadyAdded) {
+                            __final.push(copyUser);
+                            finalList.innerHTML = '';
+                            __final.forEach(function(user) {
+                                var userBox = document.createElement('div');
+                                userBox.textContent = user.username;
+                                userBox.className = 'user-box';
+                                userBox.draggable = true;
+                                userBox.style.textAlign = 'center'; // Căn lề ngang giữa
+                                userBox.style.verticalAlign = 'middle'; // Căn lề dọc giữa
+                
+                                finalList.appendChild(userBox);
+                            });
+                        }
+                    }
+            
+                    __oneper16.forEach(function(selectedUser) {
+                        var userBox = document.createElement('div');
+                        userBox.textContent = selectedUser.username;
+                        userBox.className = 'user-box';
+                        userBox.draggable = true;
+                        userBox.style.textAlign = 'center'; // Căn lề ngang giữa
+                        userBox.style.verticalAlign = 'middle'; // Căn lề dọc giữa
+
+                        var user2 = userBox;
+            
+                        // Sử dụng sự kiện click để di chuyển bản copy của selected user giữa các vùng
+                        userBox.addEventListener('click', function() {
+                            // Tạo một bản copy của selected user
+                            userBox.textContent = '<winner>' + selectedUser.username;
+                            var copyUser = Object.assign({}, selectedUser);
+                            // Đưa bản copy vào __quarterFinal
+                            updateQuarterFinalUI(copyUser); // Cập nhật giao diện quarterFinal sau khi chuyển
+                        });
+                        
+                        oneper16.appendChild(userBox);
+                    });
+                </script>
+            </div>
+            
+
         {% endif %}
     {% endif %}
 {% endblock %}

@@ -36,7 +36,7 @@ def elimination_choosing(request):
 
 def draw_group(selected_users):
     random.shuffle(selected_users)
-    __elimination = []
+    __elimination = selected_users
     return __elimination
 
 def elimination_eliminating(request):

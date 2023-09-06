@@ -1,5 +1,5 @@
 from TetrisBattle.envs.tetris_env import TetrisDoubleEnv
-from CustomAgent2 import Agent
+from CustomAgent import Agent
 # from Agent import Test
 import cv2, time, random
 import numpy as np

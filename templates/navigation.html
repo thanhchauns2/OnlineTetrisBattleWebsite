@@ -1,43 +1,52 @@
-<ul>
-    {% if not updating %}
-        <li><a class="text-decoration-underline" href="/scoreboard/">Scoreboard</a></li>
-        {% if request.user.is_staff %}
-            <li><a class="text-decoration-underline" href="/compete/tournament">Tournament</a></li>
-            <li><a class="text-decoration-underline" href="/tournament/elimination">Single-Elimination</a></li>
-        {% endif %}
-        {% if not request.user.is_staff %}
-            <li><a class="text-decoration-underline" href="/">Home</a></li>
-            <li><a class="text-decoration-underline" href="/compete/">Compete</a></li>
-            <li><a class="text-decoration-underline" href="/about/">About</a></li>
-            <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
-        {% endif %}
-        {% if not request.user.is_authenticated %}
-            <li><a class="text-decoration-underline" href="/login">Login</a></li>
-        {% endif %}
-        {% if request.user.is_authenticated %}
-            <li><a class="text-decoration-underline" href="/accounts/profile">Profile</a></li>
-            <li><a class="text-decoration-underline" href="/logout">Logout</a></li>
-        {% endif %}
-    {% endif %}
-    {% if updating %}
-        <li><a class="text-decoration-underline" href="/">Home</a></li>
-        <li><a class="text-decoration-underline" href="/">Scoreboard</a></li>
-        {% if request.user.is_staff %}
-            <li><a class="text-decoration-underline" href="/">Tournament</a></li>
-            <li><a class="text-decoration-underline" href="/">Brackets Tournament</a></li>
-            <li><a class="text-decoration-underline" href="/">Single-Elimination</a></li>
-        {% endif %}
-        {% if not request.user.is_staff %}
-            <li><a class="text-decoration-underline" href="/">Compete</a></li>
-        {% endif %}
-        <li><a class="text-decoration-underline" href="/">About</a></li>
-        <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
-        {% if not request.user.is_authenticated %}
-            <li><a class="text-decoration-underline" href="/">Login</a></li>
-        {% endif %}
-        {% if request.user.is_authenticated %}
-            <li><a class="text-decoration-underline" href="/">Profile</a></li>
-            <li><a class="text-decoration-underline" href="/">Logout</a></li>
-        {% endif %}
-    {% endif %}
-</ul>
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 style="text-align: center;">Lời giới thiệu</h1><br><br>
+    <h2>Lịch sử Tetris</h2>
+    <p>Tetris được phát triển bởi nhà phát triển game Nga 
+        Alexey Pajitnov vào năm 1984. Trò chơi đã nhanh 
+        chóng trở thành một trò chơi kinh điển và được phát hành trên nhiều nền tảng khác nhau.</p>
+
+    <h2>Luật chơi Tetris</h2>
+    <p>Luật chơi Tetris đơn giản: người chơi phải xếp các 
+        khối hình vuông đa dạng (gọi là tetromino) sao cho chúng 
+        ghép lại thành những hàng ngang hoàn chỉnh và không để cho 
+        các khối hình đó đạt đến đỉnh của màn hình chơi.</p>
+    
+    <h2>Luật chơi Tetris đối kháng trên hệ thống Tetris Battle</h2>
+    <p>Thời gian giới hạn của Tetris Battle là 2 phút.</p>
+    <p>Trong Tetris Battle, người chơi có thể thấy trước 5 Tetriminos tiếp theo.</p>
+    <p>Người chơi sẽ được sử dụng một hành động bổ sung, gọi là “hold”. Người chơi sử dụng hold để lưu trữ Tetrimino hiện tại vào bộ nhớ và lấy một Tetrimino mới.
+        Nếu đã có một Tetrimino trong bộ nhớ, thì chuyển sang sử dụng Tetrimino hiện
+        tại. Lưu ý rằng người chơi chỉ có thể sử dụng hold 1 lần trước khi một khối rơi
+        xuống đất.</p>
+    <p>Điểm số trong Tetris Battle được tính bằng số dòng đã ném cho đối phương.
+            Người chơi sẽ nhận được n - 1 sent khi xóa n hàng cùng một lúc. Do đó, chỉ loại
+            bỏ một hàng sẽ không nhận được điểm.</p>
+    <p>Người chơi có thể nhận được sent bổ sung bằng cách liên tiếp (có thể cùng một lúc hoặc 
+                liên tục trong các khoảng thời gian ngắn liên tiếp) xóa các hàng và
+                hành động này được gọi là "combo". Người chơi có thể nhận được 1/2/3/4 sent
+                thưởng bằng 1-2/3-4/5-6/&gt;7 combos.</p>
+    <p>Có hai cách ghi điểm đặc biệt trong Tetris Battle. Đầu tiên là T-spin. Nó xoay
+        Tetrimino hình chữ T để lấp đầy một ô trống không thể tiếp cận được trong
+        khoảng thời gian cuối cùng. Người chơi chỉ xóa 2 hàng khi sử dụng T-spin, nhưng
+        anh ta có thể gửi tới 4 hàng. Động tác khác được gọi là "Tetrix". Khi người chơi sử
+        dụng Tetrimino hình chữ I để xóa 4 hàng cùng một lúc, anh ta có thể gửi tới 4
+        hàng (không phải 3).</p>
+    <p>Có một cờ đặc biệt được gọi là "back to back". Nếu người chơi sử dụng T-spin
+        hoặc Tetrix trong lượt này, anh ta sẽ nhận được cờ "back to back". Khi lượt tiếp
+        theo anh ta cũng sử dụng T-spin hoặc Tetrix, anh ta có thể nhận được 2 sent
+        thưởng. Cờ sẽ biến mất sau khi thực hiện xóa bình thường.</p>
+    <p>Ở chế độ Double, người chơi có thể sử dụng "dòng rác" để gây trở ngại cho đối
+        thủ. Khi người chơi gửi đi n "dòng", nó sẽ không thể bị xóa và được gửi đến bảng
+        của đối thủ (tuy nhiên hành động gửi dòng rác có thể bị ngăn chặn nếu người chơi 
+        trong khoảng thời ngắn tiếp theo gửi được dòng rác cho đối phương). Những "dòng rác" này sẽ được tạo ra sau khi Tetrimino của đối thủ
+        rơi xuống đất. Nếu người chơi  đạt được m "dòng" bằng cách rơi Tetrimino đó, số
+        lượng "dòng rác" sẽ giảm xuống còn n - m.</p>
+    <p>Ở chế độ Double, khi bảng của người chơi không còn chỗ trống để đặt
+        Tetrimino tiếp theo, những "garbage lines" sẽ được xóa bỏ, và đối thủ của người
+        chơi sẽ bị hạ gục (KO).</p>
+                
+                    
+{% endblock %}

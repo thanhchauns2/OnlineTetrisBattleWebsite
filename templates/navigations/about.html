@@ -24,7 +24,8 @@
     <p>Điểm số trong Tetris Battle được tính bằng số dòng đã ném cho đối phương.
             Người chơi sẽ nhận được n - 1 sent khi xóa n hàng cùng một lúc. Do đó, chỉ loại
             bỏ một hàng sẽ không nhận được điểm.</p>
-    <p>Người chơi có thể nhận được sent bổ sung bằng cách liên tiếp xóa các hàng và
+    <p>Người chơi có thể nhận được sent bổ sung bằng cách liên tiếp (có thể cùng một lúc hoặc 
+                liên tục trong các khoảng thời gian ngắn liên tiếp) xóa các hàng và
                 hành động này được gọi là "combo". Người chơi có thể nhận được 1/2/3/4 sent
                 thưởng bằng 1-2/3-4/5-6/&gt;7 combos.</p>
     <p>Có hai cách ghi điểm đặc biệt trong Tetris Battle. Đầu tiên là T-spin. Nó xoay
@@ -39,7 +40,8 @@
         thưởng. Cờ sẽ biến mất sau khi thực hiện xóa bình thường.</p>
     <p>Ở chế độ Double, người chơi có thể sử dụng "dòng rác" để gây trở ngại cho đối
         thủ. Khi người chơi gửi đi n "dòng", nó sẽ không thể bị xóa và được gửi đến bảng
-        của đối thủ. Những "dòng rác" này sẽ được tạo ra sau khi Tetrimino của đối thủ
+        của đối thủ (tuy nhiên hành động gửi dòng rác có thể bị ngăn chặn nếu người chơi 
+        trong khoảng thời ngắn tiếp theo gửi được dòng rác cho đối phương). Những "dòng rác" này sẽ được tạo ra sau khi Tetrimino của đối thủ
         rơi xuống đất. Nếu người chơi  đạt được m "dòng" bằng cách rơi Tetrimino đó, số
         lượng "dòng rác" sẽ giảm xuống còn n - m.</p>
     <p>Ở chế độ Double, khi bảng của người chơi không còn chỗ trống để đặt

@@ -6,7 +6,10 @@
             <li><a class="text-decoration-underline" href="/tournament/elimination">Single-Elimination</a></li>
         {% endif %}
         {% if not request.user.is_staff %}
+            <li><a class="text-decoration-underline" href="/">Home</a></li>
             <li><a class="text-decoration-underline" href="/compete/">Compete</a></li>
+            <li><a class="text-decoration-underline" href="/about/">About</a></li>
+            <li><a class="text-decoration-underline" href="/contest_rules/">Contest Rules</a></li>
         {% endif %}
         {% if not request.user.is_authenticated %}
             <li><a class="text-decoration-underline" href="/login">Login</a></li>
